@@ -7,5 +7,5 @@ Následně spuštění:
 Web je na http://0.0.0.0/5000
 
 Odkaz na ER:
-https://drive.google.com/file/d/1xxIG4xOywJRgkaIl2XWGXEyvdSPW3jsu/view?usp=sharing
-NUTNÉ přidat v draw.io
+https://drive.google.com/file/d/19_xYOqh3i3iQrzInmw7zHrXK5splNtJC/view?usp=sharing
+NUTNÉ přidat v drivu
