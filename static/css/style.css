@@ -34,7 +34,8 @@ body{
     align-items: center;
 }
 #home_but{
-
+    display: grid;
+    align-items: center;
 }
 #search_bar{
     justify-self: center;
@@ -44,4 +45,25 @@ body{
 }
 #login{
     justify-self: right;
+}
+.btn{
+    margin-left: 15px;
+}
+#font-form{
+    color:white;
+}
+.fa-user{
+    padding-top: 1px;
+    padding-right: 10px;
+     vertical-align: middle;
+}
+.login_font{
+    font-weight: bold;
+    vertical-align: center;
+    align-self: center;
+    padding-right: 15px;
+}
+.fa-hospital-o{
+    vertical-align: middle;
+    justify-self: center;
 }
