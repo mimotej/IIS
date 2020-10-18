@@ -1,3 +1,47 @@
 html{
+    font-family: "Times New Roman", Times, serif;
+    width: 100%;
+    height: 100%;
+}
+body{
+    width: 100%;
+    height: 100%;
+    grid-template-columns: 250px 1fr 1fr;
+    grid-template-rows: 70px 1fr 1fr;
+    display: grid;
+    grid-template-areas:
+                    "top top top"
+                    "side main main"
+                    "side main main";
+}
+#side_nav{
+    grid-area: side;
+    color:white;
+    background-color: #212931;
+    height: 100%;
+    width: 200px;
+    z-index: 10;
+}
+#top_bar{
+    grid-area: top;
+    display: grid;
+    grid-template-columns: 250px 2fr 1fr;
+    color:white;
+   /* background-color: #212931;*/
+    height: 70px;
+    width: 100%;
+    z-index: 11;
+    align-items: center;
+}
+#home_but{
 
+}
+#search_bar{
+    justify-self: center;
+}
+.form-inline{
+    margin: auto;
+}
+#login{
+    justify-self: right;
 }
