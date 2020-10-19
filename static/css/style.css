@@ -10,7 +10,7 @@ body{
     grid-template-rows: 70px 1fr 1fr;
     display: grid;
     grid-template-areas:
-                    "top top top"
+                    "side top top"
                     "side main main"
                     "side main main";
 }
@@ -19,11 +19,11 @@ body{
     color:white;
     background-color: #212931;
     height: 100%;
-    width: 200px;
+    width: 250px;
     z-index: 10;
 }
 #top_bar{
-    grid-area: top;
+    grid-area: side;
     display: grid;
     grid-template-columns: 250px 2fr 1fr;
     color:white;
