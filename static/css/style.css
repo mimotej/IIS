@@ -6,7 +6,7 @@ html{
 body{
     width: 100%;
     height: 100%;
-    grid-template-columns: 250px 1fr 1fr;
+    grid-template-columns: 13.13rem 1fr 1fr;
     grid-template-rows: 70px 1fr 1fr;
     display: grid;
     grid-template-areas:
@@ -19,13 +19,13 @@ body{
     color:white;
     background-color: #212931;
     height: 100%;
-    width: 200px;
+    width: 13.13rem;
     z-index: 10;
 }
 #top_bar{
     grid-area: top;
     display: grid;
-    grid-template-columns: 250px 2fr 1fr;
+    grid-template-columns: 13.13rem 2fr 1fr;
     color:white;
    /* background-color: #212931;*/
     height: 70px;
@@ -33,9 +33,19 @@ body{
     z-index: 11;
     align-items: center;
 }
-#home_but{
+#home-but a{
     display: grid;
     align-items: center;
+    color: white;
+}
+#home-but a:link{
+    color: white;
+}
+#home-but a:hover{
+    color: white;
+}
+#home-but a:visited{
+    color: white;
 }
 #search_bar{
     justify-self: center;
@@ -66,4 +76,44 @@ body{
 .fa-hospital-o{
     vertical-align: middle;
     justify-self: center;
+    display: block;
+}
+.fa-hospital-o a:hover{
+    color: white;
+}
+.side-navbar-cell{
+    padding-bottom: 3px;
+    padding-top: 3px;
+    padding-left: 25px;
+}
+.side-navbar-cell a:link{
+    display: block;
+    text-decoration: none;
+}
+.hover{
+       background-color: #202226;
+}
+a:hover{
+    color: white;
+    text-decoration: none;
+}
+a:link{
+    color: white;
+    text-decoration: none;
+}
+a:visited{
+    color: white;
+    text-decoration: none;
+}
+.side-navbar-cell a:hover {
+    color: white;
+    text-decoration: none;
+}
+.side-navbar-cell {
+    text-decoration: none;
+}
+.active{
+    background-color: #202226;
+    border-left: .25rem solid #25b9d7;
+    padding-left: calc(25px - .25rem);
 }
