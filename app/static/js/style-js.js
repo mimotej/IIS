@@ -1,18 +1,23 @@
-
-
-var x = document.getElementById("report");
-x.addEventListener("mouseover",function (){
-    x.classList.add("hover")
+var report = document.getElementById("report");
+report.addEventListener("mouseover", function () {
+    report.classList.add("hover");
 })
-x.addEventListener("mouseout",function (){
-    x.classList.remove("hover")
+report.addEventListener("mouseout",function (){
+        report.classList.remove("hover");
+    })
+
+var manage_users = document.getElementById("manage-users");
+manage_users.addEventListener("mouseover", function () {
+    manage_users.classList.add("hover");
 })
-/*
-for(var i = 0; i < x.length; i++) {
-  (function(index) {
-    x[index].addEventListener("mouseover", function() {
-           const y = document.getElementById("report");
-           x.classList.toggle('hover');
-     })
-  })(i);
-}*/
+manage_users.addEventListener("mouseout",function (){
+        manage_users.classList.remove("hover");
+    })
+var modal_hide = document.getElementById('md01');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal_hide) {
+        modal_hide.style.display = "none";
+    }
+}
