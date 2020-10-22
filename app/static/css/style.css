@@ -17,8 +17,8 @@ body{
 #content{
     grid-area: main;
     display: grid;
-    align-items: center;
-    align-content: center;
+    align-items: start;
+    margin-top: 100px;
     justify-items: center;
     height: 100%;
 }
@@ -305,4 +305,7 @@ span#edit-user-form{
     padding: 0;
     width: 100px;
     border-radius: 0;
+}
+.table-paid-action{
+    width: 40%;
 }

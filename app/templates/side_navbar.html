@@ -1,5 +1,6 @@
 <nav id="side_nav" class="navbar-dark bg-dark">
     <div class="side-navbar-cell">MENU</div>
-            <div id="report" class="{% if active_page=="reports"%}active {% endif %}side-navbar-cell"><a href="/">Lékařské zprávy</a></div>
-    <div id="manage-users" class="{% if active_page=="manage_users"%}active {% endif %}side-navbar-cell"><a href="manage_users">Správa uživatelů</a></div>
+            <div  class="hover-button {% if active_page=="reports"%}active {% endif %}side-navbar-cell"><a href="/">Lékařské zprávy</a></div>
+    <div  class="hover-button {% if active_page=="manage_users"%}active {% endif %}side-navbar-cell"><a href="manage_users">Správa uživatelů</a></div>
+<div class="hover-button {% if active_page=="paid_action"%}active {% endif %}side-navbar-cell"><a href="paid_action">Databáze úkonů</a></div>
 </nav>

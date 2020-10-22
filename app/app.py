@@ -13,6 +13,9 @@ def user():
 def manage_users():
     return render_template('manage_users.html')
 
+@app.route('/paid_action')
+def paid_action():
+    return render_template('paid_action.html')
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-var report = document.getElementById("report");
+/*var report = document.getElementById("report");
 report.addEventListener("mouseover", function () {
     report.classList.add("hover");
 })
@@ -13,6 +13,18 @@ manage_users.addEventListener("mouseover", function () {
 manage_users.addEventListener("mouseout",function (){
         manage_users.classList.remove("hover");
     })
+    */
+var allclasses=document.getElementsByClassName('hover-button');
+for (let i = 0; i < allclasses.length; i++) {
+    allclasses[i].addEventListener("mouseover", function () {
+    allclasses[i].classList.add("hover");
+});
+}
+for (let i = 0; i < allclasses.length; i++) {
+    allclasses[i].addEventListener("mouseout", function () {
+        allclasses[i].classList.remove("hover");
+    });
+}
 var modal_hide = document.getElementById('md01');
 
 // When the user clicks anywhere outside of the modal, close it
