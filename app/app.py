@@ -13,9 +13,7 @@ def user():
 def manage_users():
     return render_template('manage_users.html')
 
-@app.route('/reports')
-def reports():
-    return render_template('reports.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

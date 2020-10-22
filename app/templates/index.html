@@ -1,2 +1,40 @@
+{% set active_page="reports" %}
 {% extends "base.html" %}
-{% block content  %}Nějakej text{% endblock %}
+{% block content  %}
+<div class="table-report">
+        <table class="table">
+  <thead>
+    <tr>
+      <th scope="col" style="width: 140px">ID</th>
+      <th scope="col"style="width: 240px">Název</th>
+      <th scope="col"style="width: 380px">Popis</th>
+      <th scope="col"style="width: 140px">Stav</th>
+      <th scope="col"style="width: 480px">Lékařská zpráva</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row" class="input-row"><input type="text" style="border-radius: 0" placeholder="" name="ID" class="input-row"></th>
+      <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
+      <td></td>
+      <td ><input style="border-radius: 0" type="text" placeholder="" name="state" class="input-row"></td>
+      <td style="display: grid; grid-template-columns: 2fr 1fr; grid-gap: 40px" ><input style="border-radius: 0"type="text" placeholder="" name="medical_report" class="input-row"> <button class="button input-row" type="submit" >Hledat</button></td>
+    </tr>
+    <tr>
+      <th scope="row">1</th>
+      <td>Prvni</td>
+      <td>Druhy</td>
+      <td>Treti</td>
+      <td>Ctvrty</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Prvni</td>
+      <td>Druhy</td>
+      <td>Treti</td>
+      <td>Ctvrty</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+{% endblock %}
