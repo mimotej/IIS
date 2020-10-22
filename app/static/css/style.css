@@ -16,11 +16,11 @@ body{
 }
 #content{
     grid-area: main;
-    background-color: #F5F5F5;
     display: grid;
     align-items: center;
     align-content: center;
     justify-items: center;
+    height: 100%;
 }
 #side_nav{
     grid-area: side;
@@ -29,8 +29,11 @@ body{
     height: 100%;
     width: 13.13rem;
     z-index: 10;
+    margin-top: 70px;
+    position: fixed;
 }
 #top_bar{
+    position: fixed;
     grid-area: top;
     display: grid;
     grid-template-columns: 13.13rem 2fr 1fr;

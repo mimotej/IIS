@@ -1,7 +1,7 @@
 {% set active_page="reports" %}
 {% extends "base.html" %}
 {% block content  %}
-<div class="table-report">
+<div class="table-report" style="margin-top: 400px">
         <table class="table">
   <thead>
     <tr>
@@ -27,13 +27,14 @@
       <td>Treti</td>
       <td>Ctvrty</td>
     </tr>
+<!--{#% for row in rows %#}
     <tr>
-      <th scope="row">2</th>
-      <td>Prvni</td>
-      <td>Druhy</td>
-      <td>Treti</td>
-      <td>Ctvrty</td>
-    </tr>
+        <th scope="row">{row.id}</th>
+        <td>{#{ row.product_code }#}</td>
+        <td>{#{# row.product_code }#}</td>
+        <td>{#{# row.product_code }#}</td>
+    </tr>*-->
+    {#% endfor %#}
   </tbody>
 </table>
 </div>
