@@ -1,0 +1,21 @@
+{% set active_page="add_users" %}
+{% extends "base.html" %}
+{% block content  %}
+<div class="add-user-form">
+    <div>
+        <label for="name"><b>Jméno</b></label>
+        <input type="text" placeholder="Zadejte své jméno" name="name" required>
+    </div>
+        <div>
+        <label for="surname"><b>Příjmení</b></label>
+        <input type="text" placeholder="Zadejte své příjmení" name="surname" required>
+    </div>
+    <div>
+        <label for="e-mail"><b>E-mail</b></label>
+        <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="e-mail" required>
+    </div>
+    <div>
+        <button class="button" type="submit">Registrovat</button>
+    </div>
+</div>
+{% endblock %}
