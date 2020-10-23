@@ -17,6 +17,9 @@ def manage_users():
 def paid_action():
     return render_template('paid_action.html')
 
+@app.route('/tickets')
+def tickets():
+    return render_template('tickets.html')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
