@@ -23,6 +23,9 @@ def add_user():
 @app.route('/manage_paid_actions')
 def manage_paid_actions():
     return render_template('manage_paid_actions.html')
+@app.route('/report')
+def report():
+    return render_template('report.html')
 #@app.route('/tickets')
 #def tickets():
 #    return render_template('tickets.html')
