@@ -7,7 +7,8 @@
         <tr>
             <th scope="col" style="width: 140px">ID</th>
             <th scope="col" style="width: 200px">Název</th>
-            <th scope="col" style="width: 10px">Cena</th>
+            <th scope="col" style="width: 120px">Cena</th>
+            <th scope="col" style="width: 100px">Typ</th>
             <th style="width: 100px"></th>
         </tr>
         </thead>
@@ -16,12 +17,14 @@
             <th scope="row" class="input-row"><input type="text" style="border-radius: 0" placeholder="" name="ID"
                                                      class="input-row"></th>
             <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
-            <td ><input style="border-radius: 0;" type="text" placeholder="" name="state" class="input-row"></td>
+            <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
+            <td><input style="border-radius: 0;" type="text" placeholder="" name="type" class="input-row"></td>
             <td><button class="button input-row" type="submit">Hledat</button></td>
         </tr>
         <tr>
             <th scope="row">1</th>
             <td>Prvni</td>
+            <td>Druhy</td>
             <td>Druhy</td>
             <td></td>
         </tr>
@@ -30,6 +33,7 @@
         <th scope="row">{row.id}</th>
         <td>{#{ row.product_code }#}</td>
         <td>{#{# row.product_code }#}</td>
+        <td>{#{# row.product_code }#}</td>
         <td></td>
     </tr>*-->
         {#% endfor %#}
@@ -37,7 +41,8 @@
             <th scope="row"></th>
             <td></td>
             <td></td>
-            <td><button class="button input-row" type="button">Přidat</button></td>
+            <td></td>
+            <td><button class="button input-row" type="button" onclick="">Přidat</button></td>
         </tr>
         </tbody>
     </table>

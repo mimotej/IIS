@@ -1,7 +1,7 @@
-{% set active_page="add_users" %}
+{% set active_page="reports" %}
 {% extends "base.html" %}
 {% block content  %}
-<div class="add-user-form">
+    <div class="add-user-form">
     <div>
         <label for="name"><b>Jméno</b></label>
         <input type="text" placeholder="Zadejte své jméno" name="name" required>
@@ -23,8 +23,17 @@
     <div>  <label for="address"><b>Adresa</b></label>
         <input type="text" placeholder="Zadejte svou adresu" name="address">
     </div>
+        <div>  <label for="name_problem"><b>Název</b></label>
+        <input type="text" placeholder="Zadejte název problému" name="name_problem">
+    </div>
+        <div>  <label for="state"><b>Stav</b></label>
+        <input type="text" placeholder="Zadejte stav" name="state">
+    </div>
+        <div>  <label for="report"><b>Lékařská zpráva</b></label>
+        <input type="text" placeholder="Zadejte lékařskou zprávu" name="report">
+    </div>
     <div>
-        <button class="button" type="submit">Registrovat</button>
+        <button class="button" type="submit">Vytvořit</button>
     </div>
 </div>
 {% endblock %}

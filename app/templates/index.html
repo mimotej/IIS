@@ -23,22 +23,24 @@
             <td></td>
             <td><button class="button input-row" type="submit">Hledat</button></td>
         </tr>
-        <tr>
-            <th scope="row">1</th>
-            <td>Prvni</td>
-            <td>Druhy</td>
-            <td>Treti</td>
-            <td>Ctvrty</td>
-            <td></td>
+        <tr style="cursor:pointer">
+            <th scope="row" onclick="document.location = 'medical_report';">1</th>
+            <td onclick="document.location = 'medical_report';">Prvni</td>
+            <td onclick="document.location = 'medical_report';">Druhy</td>
+            <td onclick="document.location = 'medical_report';">Treti</td>
+            <td onclick="document.location = 'medical_report';">Ctvrty</td>
+            <td><button class="button input-row" type="button" onclick="document.location = 'health';">Přidat</button></td>
         </tr>
         <!--{#% for row in rows %#}
+    <a href="medical_report">
     <tr>
         <th scope="row">{row.id}</th>
         <td>{#{ row.product_code }#}</td>
         <td>{#{# row.product_code }#}</td>
         <td>{#{# row.product_code }#}</td>
         <td></td>
-    </tr>*-->
+    </tr>
+    </a>*-->
         {#% endfor %#}
         </tbody>
     </table>

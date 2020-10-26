@@ -14,10 +14,16 @@
             <label><input type="checkbox" name="remember">Zapamatovat </label>
         </div>
         <div id="md01_register" class="content-modal">
+            <label for="name-reg"><b>Jméno</b></label>
+            <input type="text" placeholder="Zadejte své jméno" name="name-reg" required>
             <label for="e-mail-reg"><b>E-mail</b></label>
             <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="e-mail-reg" required>
             <label for="password-reg"><b>Heslo</b></label>
             <input type="password" placeholder="Zadejte heslo" name="password-reg" required>
+            <label for="phone-reg"><b>Telefonní číslo</b></label>
+            <input type="tel" placeholder="Zadejte své telefonní číslo" name="phone-reg" pattern="[0-9]{9}">
+            <label for="address"><b>Adresa</b></label>
+            <input type="text" placeholder="Zadejte svou adresu" name="address">
             <button class="button" type="submit">Registrovat</button>
         </div>
     </form>
