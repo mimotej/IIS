@@ -1,0 +1,35 @@
+<!--Registrační/přihlašovací formulář  -->
+<div id="md01" class="modal">
+    <form class="modal-body animation" action="" method="post">
+
+        <span onclick="document.getElementById('md01_register').style.display='none';document.getElementById('md01_login').style.display='block'; document.getElementById('md01').style.display='none';"
+              class="close" title="Zavřít">&times;</span>
+
+        <div id="md01_login" class="content-modal">
+            <label for="e-mail"><b>E-mail</b></label>
+            <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="e-mail" required>
+            <label for="password"><b>Heslo</b></label>
+            <input type="password" placeholder="Zadejte heslo" name="password" required>
+            <div></div>
+            <button class="button" type="submit">Přihlásit se</button>
+            <button class="button" type="button"
+                    onclick="document.getElementById('md01_login').style.display='none'; document.getElementById('md01_register').style.display='block';">
+                Registrovat
+            </button>
+            <label><input type="checkbox" name="remember">Zapamatovat </label>
+        </div>
+        <div id="md01_register" class="content-modal">
+            <label for="name-reg"><b>Jméno</b></label>
+            <input type="text" placeholder="Zadejte své jméno" name="name-reg" required>
+            <label for="e-mail-reg"><b>E-mail</b></label>
+            <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="e-mail-reg" required>
+            <label for="password-reg"><b>Heslo</b></label>
+            <input type="password" placeholder="Zadejte heslo" name="password-reg" required>
+            <label for="phone-reg"><b>Telefonní číslo</b></label>
+            <input type="tel" placeholder="Zadejte své telefonní číslo" name="phone-reg" pattern="[0-9]{9}">
+            <label for="address"><b>Adresa</b></label>
+            <input type="text" placeholder="Zadejte svou adresu" name="address">
+            <button class="button" type="submit">Registrovat</button>
+        </div>
+    </form>
+</div>

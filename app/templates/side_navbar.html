@@ -1,0 +1,14 @@
+<!--Navigační menu  -->
+<nav id="side_nav" class="navbar-dark bg-dark">
+    <div class="side-navbar-cell">MENU</div>
+    <div class="hover-button {% if active_page=="reports" %}active {% endif %}side-navbar-cell"><a href="/">Zdravotní
+        problémy</a></div>
+    <div class="hover-button {% if active_page=="examination_ticket" %}active {% endif %}side-navbar-cell"><a
+            href="medical_examinations">Žádosti o vyšetření</a></div>
+    <div class="hover-button {% if active_page=="manage_users" %}active {% endif %}side-navbar-cell"><a
+            href="manage_users">Správa uživatelů</a></div>
+    <div class="hover-button {% if active_page=="paid_action" %}active {% endif %}side-navbar-cell"><a
+            href="paid_action_db">Databáze úkonů</a></div>
+    <div class="hover-button {% if active_page=="manage_paid_action" %}active {% endif %}side-navbar-cell"><a
+            href="manage_paid_actions">Správa úkonů</a></div>
+</nav>

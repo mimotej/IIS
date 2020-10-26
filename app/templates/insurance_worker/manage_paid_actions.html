@@ -1,0 +1,47 @@
+<!--Schvání placených akcí  -->
+{% set active_page="manage_paid_action" %}
+{% extends "base.html" %}
+{% block content %}
+    <div class="table-paid-action">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col" style="width: 140px">ID</th>
+                <th scope="col" style="width: 200px">Název</th>
+                <th scope="col" style="width: 120px">Cena</th>
+                <th scope="col" style="width: 100px">Typ</th>
+                <th style="width: 100px"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row" class="input-row"><input type="text" style="border-radius: 0" placeholder="" name="ID"
+                                                         class="input-row"></th>
+                <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
+                <td><input style="border-radius: 0;" type="text" placeholder="" name="state" class="input-row"></td>
+                <td><input style="border-radius: 0;" type="text" placeholder="" name="type" class="input-row"></td>
+                <td>
+                    <button class="button input-row" type="submit">Hledat</button>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">1</th>
+                <td>Prvni</td>
+                <td>Druhy</td>
+                <td>Druhy</td>
+                <td style="padding-top: 0; padding-bottom: 0"><span style="font-size: 32px;">&#10003;</span> <span
+                        style="font-size: 32px; padding-left: 15px;">&times;</span></td>
+            </tr>
+            <!-- možná ukázka generování kódu -->
+            <!--{#% for row in rows %#}
+    <tr>
+        <th scope="row">{row.id}</th>
+        <td>{#{ row.product_code }#}</td>
+        <td>{#{# row.product_code }#}</td>
+        <td></td>
+    </tr>*-->
+            {#% endfor %#}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,55 @@
+<!--Úvodní obrazovka a sumarizace zdravotních problémů-->
+{% set active_page="reports" %}
+{% extends "base.html" %}
+{% block content %}
+    <div class="table-report">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col" style="width: 140px">ID</th>
+                <th scope="col" style="width: 240px">Název</th>
+                <th scope="col" style="width: 140px">Stav</th>
+                <th scope="col" style="width: 480px">Lékařská zpráva</th>
+                <th scope="col" style="width: 380px">Popis</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td scope="row" class="input-row"><input type="text" style="border-radius: 0" placeholder="" name="ID"
+                                                         class="input-row"></td>
+                <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
+                <td><input style="border-radius: 0" type="text" placeholder="" name="state" class="input-row"></td>
+                <td><input style="border-radius: 0" type="text" placeholder="" name="medical_report" class="input-row">
+                </td>
+                <td></td>
+                <td>
+                    <button class="button input-row" type="submit">Hledat</button>
+                </td>
+            </tr>
+            <tr style="cursor:pointer">
+                <th scope="row" onclick="document.location = 'problem_report';">1</th>
+                <td onclick="document.location = 'problem_report';">Prvni</td>
+                <td onclick="document.location = 'problem_report';">Druhy</td>
+                <td onclick="document.location = 'problem_report';">Treti</td>
+                <td onclick="document.location = 'problem_report';">Ctvrty</td>
+                <td>
+                    <button class="button input-row" type="button" onclick="document.location = 'health';">Přidat
+                    </button>
+                </td>
+            </tr>
+            <!--{#% for row in rows %#}
+    <a href="medical_report">
+    <tr>
+        <th scope="row">{row.id}</th>
+        <td>{#{ row.product_code }#}</td>
+        <td>{#{# row.product_code }#}</td>
+        <td>{#{# row.product_code }#}</td>
+        <td></td>
+    </tr>
+    </a>*-->
+            {#% endfor %#}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

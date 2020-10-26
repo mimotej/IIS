@@ -1,0 +1,13 @@
+<!--Předat zdravotní problém  -->
+{% set active_page="reports" %}
+{% extends "base.html" %}
+{% block content %}
+    <div class="add-user-form">
+        <div>
+            <label for="name"><b>ID</b></label>
+            <input type="text" placeholder="Zadejte ID doktora" name="id_doctor" required>
+            <div>
+                <button class="button" type="submit">Předat</button>
+            </div>
+        </div>
+{% endblock %}
