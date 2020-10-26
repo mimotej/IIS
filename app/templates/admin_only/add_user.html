@@ -1,30 +1,31 @@
+<!--Formulář na přidávání uživatelů adminem  -->
 {% set active_page="add_users" %}
 {% extends "base.html" %}
-{% block content  %}
-<div class="add-user-form">
-    <div>
-        <label for="name"><b>Jméno</b></label>
-        <input type="text" placeholder="Zadejte své jméno" name="name" required>
-    </div>
+{% block content %}
+    <div class="add-user-form">
         <div>
-        <label for="surname"><b>Příjmení</b></label>
-        <input type="text" placeholder="Zadejte své příjmení" name="surname" required>
+            <label for="name"><b>Jméno</b></label>
+            <input type="text" placeholder="Zadejte své jméno" name="name" required>
+        </div>
+        <div>
+            <label for="surname"><b>Příjmení</b></label>
+            <input type="text" placeholder="Zadejte své příjmení" name="surname" required>
+        </div>
+        <div>
+            <label for="e-mail"><b>E-mail</b></label>
+            <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="e-mail" required>
+        </div>
+        <div><label for="password-reg"><b>Heslo</b></label>
+            <input type="password" placeholder="Zadejte heslo" name="password-reg" required>
+        </div>
+        <div><label for="phone-reg"><b>Telefonní číslo</b></label>
+            <input type="tel" placeholder="Zadejte své telefonní číslo" name="phone-reg" pattern="[0-9]{9}">
+        </div>
+        <div><label for="address"><b>Adresa</b></label>
+            <input type="text" placeholder="Zadejte svou adresu" name="address">
+        </div>
+        <div>
+            <button class="button" type="submit">Registrovat</button>
+        </div>
     </div>
-    <div>
-        <label for="e-mail"><b>E-mail</b></label>
-        <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="e-mail" required>
-    </div>
-    <div><label for="password-reg"><b>Heslo</b></label>
-        <input type="password" placeholder="Zadejte heslo" name="password-reg" required>
-    </div>
-    <div> <label for="phone-reg"><b>Telefonní číslo</b></label>
-        <input type="tel" placeholder="Zadejte své telefonní číslo" name="phone-reg" pattern="[0-9]{9}">
-    </div>
-    <div>  <label for="address"><b>Adresa</b></label>
-        <input type="text" placeholder="Zadejte svou adresu" name="address">
-    </div>
-    <div>
-        <button class="button" type="submit">Registrovat</button>
-    </div>
-</div>
 {% endblock %}

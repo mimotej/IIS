@@ -1,43 +1,50 @@
+<!--Správa uživatelů adminem  -->
 {% set active_page="manage_users" %}
 {% extends "base.html" %}
-{% block content  %}<div class="table-paid-action">
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col" style="width: 140px">ID</th>
-            <th scope="col" style="width: 200px">Příjmení</th>
-            <th scope="col" style="width: 100px">E-mail</th>
-            <th style="width: 100px"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th scope="row" class="input-row"><input type="text" style="border-radius: 0" placeholder="" name="ID"
-                                                     class="input-row"></th>
-            <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
-            <td ><input style="border-radius: 0;" type="text" placeholder="" name="state" class="input-row"></td>
-            <td><button class="button input-row" type="submit">Hledat</button></td>
-        </tr>
-        <tr>
-            <th scope="row">1</th>
-            <td>Prvni</td>
-            <td>Druhy</td>
-            <td></td>
-        </tr>
-        <!--{#% for row in rows %#}
+{% block content %}
+    <div class="table-paid-action">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col" style="width: 140px">ID</th>
+                <th scope="col" style="width: 200px">Příjmení</th>
+                <th scope="col" style="width: 100px">E-mail</th>
+                <th style="width: 100px"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row" class="input-row"><input type="text" style="border-radius: 0" placeholder="" name="ID"
+                                                         class="input-row"></th>
+                <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
+                <td><input style="border-radius: 0;" type="text" placeholder="" name="state" class="input-row"></td>
+                <td>
+                    <button class="button input-row" type="submit">Hledat</button>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">1</th>
+                <td>Prvni</td>
+                <td>Druhy</td>
+                <td></td>
+            </tr>
+            <!--{#% for row in rows %#}
     <tr>
         <th scope="row">{row.id}</th>
         <td>{#{ row.product_code }#}</td>
         <td>{#{# row.product_code }#}</td>
         <td></td>
     </tr>*-->
-        {#% endfor %#}
-                <tr>
-            <th scope="row"></th>
-            <td></td>
-            <td></td>
-            <td><button class="button input-row" type="button">Přidat</button></td>
-        </tr>
-        </tbody>
-    </table>
-</div>{% endblock %}
+            {#% endfor %#}
+            <tr>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td>
+                    <button class="button input-row" type="button" onclick="document.location = 'add_user';">Přidat
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>{% endblock %}

@@ -1,0 +1,37 @@
+<!--Zdravotní problém karta  -->
+{% set active_page="reports" %}
+{% extends "base.html" %}
+{% block content %}
+    <div class="problem">
+        <div style="text-align: right; grid-area: top-button">
+            <button class="button" style="width: 100px;" type="submit"
+                    onclick="document.location = 'delegate_problem';">Předat
+            </button>
+        </div>
+        <div style="grid-area: name">
+            <label><b>Název :</b></label>
+            <div>Placeholder</div>
+        </div>
+        <div style="grid-area: state">
+            <label><b>Stav :</b></label>
+            <div>Placeholder</div>
+        </div>
+        <div style="grid-area: doctor">
+            <label><b>Ošetřující lékař :</b></label>
+            <div>Placeholder</div>
+        </div>
+        <div style="grid-area: description">
+            <label><b>Popis :</b></label>
+            <div>Placeholder</div>
+        </div>
+        <div style="grid-area: attachment">
+            <label><b>Lékařské zprávy :</b></label>
+            <div onclick="document.location = 'medical_report';" style="cursor: pointer">Placeholder</div>
+        </div>
+        <div style="text-align: right; grid-area: bottom-button">
+            <button class="button" style="width: 200px;" type="submit" onclick="document.location = 'ticket';">Zažádat o
+                vyšetření
+            </button>
+        </div>
+    </div>
+{% endblock %}

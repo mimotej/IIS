@@ -1,15 +1,13 @@
-<!--Schvání placených akcí  -->
-{% set active_page="manage_paid_action" %}
+<!--Seznam požadovaných vyšetření -->
+{% set active_page="examination_ticket" %}
 {% extends "base.html" %}
 {% block content %}
-    <div class="table-paid-action">
+        <div class="table-medical-examinations">
         <table class="table">
             <thead>
             <tr>
                 <th scope="col" style="width: 140px">ID</th>
-                <th scope="col" style="width: 200px">Název</th>
-                <th scope="col" style="width: 120px">Cena</th>
-                <th scope="col" style="width: 100px">Typ</th>
+                <th scope="col" style="width: 200px">Popis</th>
                 <th style="width: 100px"></th>
             </tr>
             </thead>
@@ -18,19 +16,14 @@
                 <th scope="row" class="input-row"><input type="text" style="border-radius: 0" placeholder="" name="ID"
                                                          class="input-row"></th>
                 <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
-                <td><input style="border-radius: 0;" type="text" placeholder="" name="state" class="input-row"></td>
-                <td><input style="border-radius: 0;" type="text" placeholder="" name="type" class="input-row"></td>
                 <td>
                     <button class="button input-row" type="submit">Hledat</button>
                 </td>
             </tr>
             <tr>
-                <th scope="row">1</th>
-                <td>Prvni</td>
-                <td>Druhy</td>
-                <td>Druhy</td>
-                <td style="padding-top: 0; padding-bottom: 0"><span style="font-size: 32px;">&#10003;</span> <span
-                        style="font-size: 32px; padding-left: 15px;">&times;</span></td>
+                <th scope="row" onclick="document.location = 'medical_examination';">1</th>
+                <td onclick="document.location = 'medical_examination';" style="cursor: pointer">Prvni</td>
+                <td></td>
             </tr>
             <!-- možná ukázka generování kódu -->
             <!--{#% for row in rows %#}

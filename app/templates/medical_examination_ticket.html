@@ -1,18 +1,15 @@
+<!--Formulář žádosti o vyšetření-->
 {% set active_page="reports" %}
 {% extends "base.html" %}
-{% block content  %}
+{% block content %}
     <div class="new-ticket">
         <div>
-            <label><b>Název</b></label>
-            <input type="text" placeholder="Placeholder" name="name-medical-ticket">
-        </div>
-        <div>
-            <label><b>Stav</b></label>
-            <input type="text" placeholder="Placeholder" name="state">
+            <label><b>ID doktora</b></label>
+            <input type="text" placeholder="Zadejte id doktora" name="id">
         </div>
         <div>
             <label><b>Popis</b></label>
-            <input type="text" placeholder="Zadejte své příjmení" name="surname" required>
+            <input type="text" placeholder="Zadejte popis" name="description" required>
         </div>
         <div>
             <button class="button input-row" type="submit">Zadat</button>

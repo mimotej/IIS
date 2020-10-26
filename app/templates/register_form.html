@@ -1,7 +1,9 @@
+<!--Registrační/přihlašovací formulář  -->
 <div id="md01" class="modal">
     <form class="modal-body animation" action="" method="post">
 
-        <span onclick="document.getElementById('md01_register').style.display='none';document.getElementById('md01_login').style.display='block'; document.getElementById('md01').style.display='none';" class="close" title="Zavřít">&times;</span>
+        <span onclick="document.getElementById('md01_register').style.display='none';document.getElementById('md01_login').style.display='block'; document.getElementById('md01').style.display='none';"
+              class="close" title="Zavřít">&times;</span>
 
         <div id="md01_login" class="content-modal">
             <label for="e-mail"><b>E-mail</b></label>
@@ -10,7 +12,10 @@
             <input type="password" placeholder="Zadejte heslo" name="password" required>
             <div></div>
             <button class="button" type="submit">Přihlásit se</button>
-            <button class="button" type="button" onclick="document.getElementById('md01_login').style.display='none'; document.getElementById('md01_register').style.display='block';">Registrovat</button>
+            <button class="button" type="button"
+                    onclick="document.getElementById('md01_login').style.display='none'; document.getElementById('md01_register').style.display='block';">
+                Registrovat
+            </button>
             <label><input type="checkbox" name="remember">Zapamatovat </label>
         </div>
         <div id="md01_register" class="content-modal">
