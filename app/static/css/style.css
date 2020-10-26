@@ -1,3 +1,419 @@
-html{
+html {
+    font-family: "Times New Roman", Times, serif;
+    width: 100%;
+    height: 100%;
+}
 
+body {
+    width: 100%;
+    height: 100%;
+    grid-template-columns: 13.13rem 1fr 1fr;
+    grid-template-rows: 70px 1fr 1fr;
+    display: grid;
+    grid-template-areas:
+                    "top top top"
+                    "side main main"
+                    "side main main";
+}
+
+#content {
+    grid-area: main;
+    display: grid;
+    align-items: start;
+    margin-top: 100px;
+    justify-items: center;
+    height: 100%;
+}
+
+#side_nav {
+    grid-area: side;
+    color: white;
+    background-color: #212931;
+    height: 100%;
+    width: 13.13rem;
+    z-index: 10;
+    margin-top: 70px;
+    position: fixed;
+}
+
+#top_bar {
+    position: fixed;
+    grid-area: top;
+    display: grid;
+    grid-template-columns: 13.13rem 2fr 1fr;
+    color: white;
+    /* background-color: #212931;*/
+    height: 70px;
+    width: 100%;
+    z-index: 11;
+    align-items: center;
+}
+
+#home-but a {
+    display: grid;
+    align-items: center;
+    color: white;
+}
+
+#home-but a:link {
+    color: white;
+}
+
+#home-but a:hover {
+    color: white;
+}
+
+#home-but a:visited {
+    color: white;
+}
+
+#search_bar {
+    justify-self: center;
+}
+
+.form-inline {
+    margin: auto;
+}
+
+#login {
+    justify-self: right;
+}
+
+.btn {
+    margin-left: 15px;
+}
+
+#font-form {
+    color: white;
+}
+
+.fa-user {
+    padding-top: 1px;
+    padding-right: 10px;
+    vertical-align: middle;
+}
+
+.login_font {
+    font-weight: bold;
+    vertical-align: center;
+    align-self: center;
+    padding-right: 15px;
+}
+
+.fa-hospital-o {
+    vertical-align: middle;
+    justify-self: center;
+    display: block;
+}
+
+.fa-hospital-o a:hover {
+    color: white;
+}
+
+.side-navbar-cell {
+    padding-bottom: 3px;
+    padding-top: 3px;
+    padding-left: 25px;
+}
+
+.side-navbar-cell a:link {
+    display: block;
+    text-decoration: none;
+}
+
+.hover {
+    background-color: #202226;
+}
+
+a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+a:link {
+    color: white;
+    text-decoration: none;
+}
+
+a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+.side-navbar-cell a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.side-navbar-cell {
+    text-decoration: none;
+}
+
+.active {
+    background-color: #202226;
+    border-left: .25rem solid #25b9d7;
+    padding-left: calc(25px - .25rem);
+}
+
+#login a:hover {
+    text-decoration: none;
+    color: #909090;
+}
+
+input[type=text], input[type=password], input[type=email], input[type=tel] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid black;
+    box-sizing: border-box;
+    border-radius: 10px;
+    outline: none;
+}
+
+.button {
+    background-color: #202226;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.close {
+    cursor: pointer;
+}
+
+.button:hover {
+    opacity: 0.8;
+}
+
+.container {
+    padding: 16px;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    padding-top: 60px;
+}
+
+.modal-body {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+    border: 1px solid #888;
+    width: 400px; /* Could be more or less, depending on screen size */
+    border-radius: 20px;
+}
+
+.animation {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+    from {
+        -webkit-transform: scale(0)
+    }
+    to {
+        -webkit-transform: scale(1)
+    }
+}
+
+
+@keyframes animatezoom {
+    from {
+        transform: scale(0)
+    }
+    to {
+        transform: scale(1)
+    }
+}
+
+.animationout {
+    -webkit-animation: animateoutzoom 0.6s;
+    animation: animateoutzoom 0.6s
+}
+
+@-webkit-keyframes animateoutzoom {
+    from {
+        -webkit-transform: scale(1)
+    }
+    to {
+        -webkit-transform: scale(0)
+    }
+}
+
+@keyframes animateoutzoom {
+    from {
+        transform: scale(1)
+    }
+    to {
+        transform: scale(0)
+    }
+}
+
+#md01_register {
+    display: none;
+}
+
+.no-edit-user-form {
+    padding: 60px 60px 100px 60px;
+    display: grid;
+}
+
+.no-edit-user-form-container {
+    background-color: white;
+    width: 500px;
+    margin: 0 auto;
+    height: 700px;
+    -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+
+}
+
+#pencil {
+    justify-self: end;
+}
+
+.user-form-item {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    padding-top: 24px;
+    align-items: center;
+    height: 90px;
+    box-sizing: border-box;
+
+}
+
+.toggle-block {
+    display: block;
+}
+
+.toggle-none {
+    display: none;
+}
+
+a:link .fa-pencil-square-o {
+    color: black;
+}
+
+a:visited .fa-pencil-square-o {
+    color: black;
+}
+
+a:hover .fa-pencil-square-o {
+    color: #202226;
+}
+
+#custom-label {
+    margin-bottom: 0;
+}
+
+#edit-user-form {
+    display: none;
+}
+
+span#edit-user-form {
+
+}
+
+.button-edit-user-form-input {
+    margin-top: 50px;
+}
+
+.table {
+    background-color: white;
+    -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+}
+
+.table-report {
+    width: 80%;
+}
+
+.input-row {
+    height: 40px;
+}
+
+.button.input-row {
+    padding: 0;
+    width: 100px;
+    border-radius: 0;
+}
+
+.table-paid-action {
+    width: 40%;
+}
+
+.add-user-form {
+    padding: 20px 30px 20px 30px;
+    background-color: white;
+    -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+}
+
+.problem {
+    min-width: 1200px;
+    max-width: 1280px;
+    padding: 20px 30px 20px 30px;
+    background-color: white;
+    -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    display: grid;
+    grid-template-areas: "top-button"
+                        "name"
+                        "state"
+                        "doctor"
+                        "description"
+                        "attachment"
+                        "bottom-button";
+    grid-template-rows: 1fr 1fr auto 1fr;
+}
+
+.report {
+    min-width: 1200px;
+    max-width: 1280px;
+    padding: 20px 30px 20px 30px;
+    background-color: white;
+    -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    display: grid;
+    grid-template-areas:"name"
+                        "doctor"
+                        "description"
+                        "attachment";
+    grid-template-rows: 1fr 1fr auto 1fr;
+}
+
+.new-ticket {
+    min-width: 1200px;
+    max-width: 1280px;
+    padding: 20px 30px 20px 30px;
+    background-color: white;
+    -webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
+    display: grid;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+.table-medical-examinations {
+    width: 40%;
 }
