@@ -16,9 +16,15 @@ def manage_users():
 @app.route('/paid_action_db')
 def paid_action():
     return render_template('insurance_worker/paid_action_db.html')
+@app.route('/paid_action_new')
+def paid_action_new():
+    return render_template('insurance_worker/manage_new_action.html')
 @app.route('/health')
 def health_problem():
     return render_template('doctor_only/add_health_problem_new_user.html')
+@app.route('/health_old')
+def health_problem_old():
+    return render_template('doctor_only/add_health_problem_registered_user.html')
 @app.route('/add_user')
 def add_user():
     return render_template('admin_only/add_user.html')
