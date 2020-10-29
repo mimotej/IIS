@@ -1,6 +1,7 @@
 from flask import request
 
 from flask import Flask, render_template
+from database.db import SQLConn
 
 app = Flask(__name__)
 
@@ -92,4 +93,5 @@ def medical_examination():
     return render_template('doctor_only/medical_examination.html')
 
 if __name__ == '__main__':
+    db = SQLConn()
     app.run(debug=True, host='0.0.0.0')
