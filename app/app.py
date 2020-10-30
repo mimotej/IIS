@@ -1,3 +1,5 @@
+from flask import request
+
 from flask import Flask, render_template
 
 app = Flask(__name__)
@@ -7,7 +9,14 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-
+@app.route('/process_form', methods=['GET', 'POST'])
+def process_form():
+    if 'e-mail' in request.form:
+        return 'První formulář'
+    elif 'e-mail-reg' in request.form:
+        return 'Druhý formulář'
+    else:
+        return 'Chyba'
 @app.route('/user')
 def user():
     return render_template('user.html')

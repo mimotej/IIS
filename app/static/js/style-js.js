@@ -30,6 +30,7 @@ var modal_hide = document.getElementById('md01');
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
     if (event.target == modal_hide) {
+        document.getElementById('md01_register').style.display='none';document.getElementById('md01_login').style.display='block';
         modal_hide.style.display = "none";
     }
 }
