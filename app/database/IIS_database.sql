@@ -18,7 +18,8 @@ CREATE TABLE person (
 	phone_number VARCHAR(50) ,
     address VARCHAR(100) ,
     PRIMARY KEY(id_person),
-	CONSTRAINT valid_email CHECK(email LIKE '%___@___%.__%')
+	CONSTRAINT valid_email CHECK(email LIKE '%___@___%.__%'),
+    UNIQUE(email)
 );
 
 CREATE TABLE patient (
