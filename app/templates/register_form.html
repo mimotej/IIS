@@ -1,12 +1,12 @@
 <!--Registrační/přihlašovací formulář  -->
-<div id="md01" class="modal">
+<div id="md01" class="modal" {% if session['form_error']== True%} style="display: block"{% endif %}>
     <form id="md01_login" class="modal-body animation" action="{{ url_for('login') }}" method="post">
 
         <span onclick="document.getElementById('md01_register').style.display='none';document.getElementById('md01_login').style.display='block'; document.getElementById('md01').style.display='none';"
               class="close" title="Zavřít">&times;</span>
 
         <div class="content-modal">
-            <label for="e-mail"><b>E-mail</b></label>
+            <label for="e-mail"><b>E-mail {{ session['form_error'] }}</b></label>
             <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="email" required>
             <label for="password"><b>Heslo</b></label>
             <input type="password" placeholder="Zadejte heslo" name="password" required>
@@ -25,6 +25,8 @@
             <div class="content-modal">
             <label for="name"><b>Jméno</b></label>
             <input type="text" placeholder="Zadejte své jméno" name="name-reg" required>
+            <label for="name"><b>Příjmení</b></label>
+            <input type="text" placeholder="Zadejte své příjmení" name="surname-reg" required>
             <label for="email"><b>E-mail</b></label>
             <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="e-mail-reg" required>
             <label for="password"><b>Heslo</b></label>
