@@ -23,7 +23,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 def index():
     return render_template('index.html')
 
-@app.route('/logn', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     '''Process data for login'''
     if( request.method == "POST" ):
@@ -34,26 +34,25 @@ def login():
             if user:
                 if bcrypt.check_password_hash(user.password, request.form['password']):
                     session['user_id'] = user._id
-                    logger.debug("User logged in")
+                    session['isAdmin'] = user.isAdmin
                 else:
                     logger.debug("Bad password")
             else:
                 logger.debug("User not found")
-    return redirect(url_for('index'))
+    return redirect(request.referrer)
 
 @app.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
     '''Process data for sign up'''
     data = request.form
-    import pdb; pdb.set_trace()
     if(User.query.filter_by(email=data['email']).first()):
         logger.debug("Email already registered")
     else:
-        new_user = User(data['name'], data['surname'], bcrypt.generate_password_hash(data['password']), data['email'], data['phone'])
+        new_user = User(**data)
         db.session.add(new_user)
         db.session.commit()
         logger.debug("New user registered")
-    return redirect(url_for('index'))
+    return redirect(request.referrer)
 
 @app.route('/user')
 def user():
