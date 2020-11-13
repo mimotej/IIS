@@ -2,10 +2,10 @@ import logging as logger
 logger.basicConfig(level=logger.DEBUG)
 
 from app import app, db
-
+"""
 class User(db.Model):
     __tablename__ = 'person'
-    """Jeste chybi pridat adresu ale pro testovani asi neni tolik nutna jen se nesmi zapomenout!"""
+    Jeste chybi pridat adresu ale pro testovani asi neni tolik nutna jen se nesmi zapomenout!
     _id = db.Column("id_person", db.Integer, primary_key=True)
     name = db.Column("person_name", db.String(50))
     surname = db.Column("surname", db.String(50))
@@ -22,7 +22,7 @@ class User(db.Model):
             elif key == "surname":
                 self.surname = value
             elif key == "password":
-                self.password = value
+                self.password = bcrypt.generate_password_hash(value)
             elif key == "email":
                 self.email = value
             elif key == "phone":
@@ -41,7 +41,7 @@ class User(db.Model):
                 if value == False:
                     self.isDoctor = False
                 else:
-                    self.isDoctor = True
+                    self.isDoctor = True"""
 # app.config['MYSQL_HOST'] = 'localhost'
 # app.config['MYSQL_USER'] = 'root'
 # app.config['MYSQL_PASSWORD'] = 'IISkokos1999?'
