@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
 from database import *
@@ -7,23 +6,17 @@ from datetime import timedelta
 import logging as logger
 logger.basicConfig(level='DEBUG')
 
-app = Flask(__name__)
-db = SQLAlchemy(app)
-db.init_app(app)
+from database import db, app
 bcrypt = Bcrypt(app)
 
 app.permanent_session_lifetime = timedelta(minutes=30)
 
-app.config['SECRET_KEY'] = 'a4b32a254b543f4d5e44ed255a4b22c1'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Iis2020?@127.0.0.1/IIS'
-app.config['SECRET_KEY'] = '1f3118edada4643f34538ea423d32b21'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 @app.route('/')
 def index():
+    import pdb; pdb.set_trace()
     return render_template('index.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/logn', methods=['GET', 'POST'])
 def login():
     '''Process data for login'''
     if( request.method == "POST" ):
@@ -34,25 +27,26 @@ def login():
             if user:
                 if bcrypt.check_password_hash(user.password, request.form['password']):
                     session['user_id'] = user._id
-                    session['isAdmin'] = user.isAdmin
+                    logger.debug("User logged in")
                 else:
                     logger.debug("Bad password")
             else:
                 logger.debug("User not found")
-    return redirect(request.referrer)
+    return redirect(url_for('index'))
 
 @app.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
     '''Process data for sign up'''
     data = request.form
+    import pdb; pdb.set_trace()
     if(User.query.filter_by(email=data['email']).first()):
         logger.debug("Email already registered")
     else:
-        new_user = User(**data)
+        new_user = User(data['name'], data['surname'], bcrypt.generate_password_hash(data['password']), data['email'], data['phone'])
         db.session.add(new_user)
         db.session.commit()
         logger.debug("New user registered")
-    return redirect(request.referrer)
+    return redirect(url_for('index'))
 
 @app.route('/user')
 def user():
@@ -128,45 +122,6 @@ def medical_examinations():
 @app.route('/medical_examination')
 def medical_examination():
     return render_template('doctor_only/medical_examination.html')
-class User(db.Model):
-    __tablename__ = 'person'
-    """Jeste chybi pridat adresu ale pro testovani asi neni tolik nutna jen se nesmi zapomenout!"""
-    _id = db.Column("id_person", db.Integer, primary_key=True)
-    name = db.Column("person_name", db.String(50))
-    surname = db.Column("surname", db.String(50))
-    password = db.Column("person_password", db.String(255))
-    email = db.Column("email", db.String(50))
-    phone = db.Column("phone_number", db.String(50))
-    isAdmin = db.Column("isAdmin", db.Boolean(), default=False)
-    isDoctor = db.Column("isDoctor", db.Boolean(), default=False)
-    isInsurance = db.Column("isInsurance", db.Boolean(), default=False)
-    def __init__(self,**kwargs):
-        for key, value in kwargs.items():
-            if key == "name":
-                self.name = value
-            elif key == "surname":
-                self.surname = value
-            elif key == "password":
-                self.password = bcrypt.generate_password_hash(value)
-            elif key == "email":
-                self.email = value
-            elif key == "phone":
-                self.phone = value
-            elif key == "isInsurance":
-                if value == False:
-                    self.isInsurance = False
-                else:
-                    self.isInsurance = True
-            elif key == "isAdmin":
-                if value == False:
-                    self.isAdmin = False
-                else:
-                    self.isAdmin = True
-            elif key == "isDoctor":
-                if value == False:
-                    self.isDoctor = False
-                else:
-                    self.isDoctor = True
 
 if __name__ == '__main__':
     db.create_all()
