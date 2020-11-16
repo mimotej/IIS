@@ -2,7 +2,11 @@
 {% set active_page="reports" %}
 {% extends "base.html" %}
 {% block content %}
+  <form id="health_problem_old" class="modal-body animation" action="{{ url_for('health_problem_old') }}" method="post">
     <div class="add-user-form">
+        <div><label for="user_email"><b>e-mail</b></label>
+            <input type="text" placeholder="Zadejte e-mail pacienta" name="user_email">
+        </div>
         <div><label for="name_problem"><b>Název</b></label>
             <input type="text" placeholder="Zadejte název problému" name="name">
         </div>
@@ -12,11 +16,12 @@
         <div><label for="description"><b>Popis</b></label><br>
             <textarea type="text" placeholder="Zadejte stav" name="description"></textarea>
         </div>
-        <div><label for="report"><b>Lékařská zpráva</b></label>
+        <!--div><label for="report"><b>Lékařská zpráva</b></label>
             <input type="file" placeholder="Zadejte lékařskou zprávu" name="report">
-        </div>
+        </div-->
         <div>
             <button class="button" type="submit">Vytvořit</button>
         </div>
     </div>
+  </form>
 {% endblock %}

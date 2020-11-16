@@ -2,6 +2,7 @@
 {% set active_page="reports" %}
 {% extends "base.html" %}
 {% block content %}
+  <form id="health_problem"  action="{{ url_for('health_problem') }}" method="post">
     <div class="add-user-form">
         <div>
             <label><b>Uživatel již registrován?</b></label>
@@ -37,11 +38,12 @@
         <div><label for="description"><b>Popis</b></label><br>
             <textarea type="text" placeholder="Zadejte stav" name="description"></textarea>
         </div>
-        <div><label for="report"><b>Lékařská zpráva</b></label>
+        <!--div><label for="report"><b>Lékařská zpráva</b></label>
             <input type="file" placeholder="Zadejte lékařskou zprávu" name="report">
-        </div>
+        </div-->
         <div>
             <button class="button" type="submit">Vytvořit</button>
         </div>
     </div>
+  </form>
 {% endblock %}

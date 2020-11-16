@@ -82,13 +82,50 @@ def paid_action_new():
     return render_template('insurance_worker/manage_new_action.html')
 
 
-@app.route('/health')
+@app.route('/health', methods=['GET', 'POST'])
 def health_problem():
+    if( request.method == "POST" ):
+        if session['isAdmin'] == True or session['isDoctor']==True:
+            data = request.form.to_dict()
+            if(User.query.filter_by(email=data['email']).first()):
+                logger.debug("Email already registered")
+            else:
+                data['password']=bcrypt.generate_password_hash(data['password'])
+                new_user = User(**data)
+                new_user.isAdmin = False
+                new_user.isDoctor = False
+                new_user.isInsurance = False
+                db.session.add(new_user)
+                db.session.commit()
+                logger.debug("New user registered")
+            new_problem=HealthProblem(**data)
+            user = User.query.filter_by(email=request.form['email']).first()
+            if user:
+                new_problem.patient_id = user._id
+                new_problem.doctor_id = session['user_id']
+                db.session.add(new_problem)
+                db.session.commit()
+            else:
+                logger.debug("User not found")
+            return redirect(url_for('health_problem'))
     return render_template('doctor_only/add_health_problem_new_user.html')
 
 
-@app.route('/health_old')
+@app.route('/health_old', methods=['GET', 'POST'])
 def health_problem_old():
+    if( request.method == "POST" ):
+        if session['isAdmin'] == True or session['isDoctor']==True:
+            data = request.form.to_dict()
+            new_problem=HealthProblem(**data)
+            user = User.query.filter_by(email=request.form['user_email']).first()
+            if user:
+                new_problem.patient_id = user._id
+                new_problem.doctor_id = session['user_id']
+                db.session.add(new_problem)
+                db.session.commit()
+            else:
+                logger.debug("User not found")
+            return redirect(url_for('health_problem'))
     return render_template('doctor_only/add_health_problem_registered_user.html')
 
 
