@@ -19,9 +19,9 @@ def index():
 def login():
     '''Process data for login'''
     if( request.method == "POST" ):
-        if( 'user_id' in session ):
+            '''if( 'user_id' in session ): PROC TO TU JE? 
             logger.debug("You are logged in")
-        else:
+            else:'''
             user = User.query.filter_by(email=request.form['email']).first()
             if user:
                 if bcrypt.check_password_hash(user.password, request.form['password']):
@@ -46,6 +46,9 @@ def sign_up():
     else:
         data['password']=bcrypt.generate_password_hash(data['password'])
         new_user = User(**data)
+        new_user.isAdmin = False
+        new_user.isDoctor = False
+        new_user.isInsurance = False
         db.session.add(new_user)
         db.session.commit()
         logger.debug("New user registered")
@@ -53,12 +56,14 @@ def sign_up():
 
 @app.route('/user')
 def user():
-    return render_template('user.html')
+    user = User.query.filter_by(_id=session['user_id']).first()
+    return render_template('user.html',name = user.name,surname = user.surname,email = user.email,phone = user.phone)
 
 
 @app.route('/manage_users')
 def manage_users():
-    return render_template('admin_only/manage_users.html')
+    users = User.query
+    return render_template('admin_only/manage_users.html',users = users)
 
 
 @app.route('/paid_action_db')

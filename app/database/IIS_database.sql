@@ -17,6 +17,9 @@ CREATE TABLE person (
 	email VARCHAR(50) ,
 	phone_number VARCHAR(50) ,
     address VARCHAR(100) ,
+    isAdmin BOOLEAN,
+    isDoctor BOOLEAN,
+    isInsurance BOOLEAN,
     PRIMARY KEY(id_person),
 	CONSTRAINT valid_email CHECK(email LIKE '%___@___%.__%'),
     UNIQUE(email)

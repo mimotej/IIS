@@ -22,12 +22,13 @@
                     <button class="button input-row" type="submit">Hledat</button>
                 </td>
             </tr>
-            <tr>
-                <th scope="row">1</th>
-                <td>Prvni</td>
-                <td>Druhy</td>
+            {%for user in users%}
+                <th scope="row">{{ loop.index}}</th>
+                <td>{{user.surname}}</td>
+                <td>{{user.email}}</td>
                 <td></td>
             </tr>
+            {%endfor%}
             <!--{#% for row in rows %#}
     <tr>
         <th scope="row">{row.id}</th>
