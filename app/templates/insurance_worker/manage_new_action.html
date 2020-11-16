@@ -2,6 +2,7 @@
 {% set active_page="add_users" %}
 {% extends "base.html" %}
 {% block content %}
+    <form action="{{ url_for('paid_action_new') }}" method="post">
     <div class="add-user-form">
         <div>
             <label for="name"><b>Název</b></label>
@@ -19,4 +20,5 @@
             <button class="button" type="submit">Přidat</button>
         </div>
     </div>
+    </form>
 {% endblock %}

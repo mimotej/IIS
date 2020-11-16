@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from flask_bcrypt import Bcrypt
 
 from database import *
 from datetime import timedelta
@@ -13,10 +12,10 @@ app.permanent_session_lifetime = timedelta(minutes=30)
 
 @app.route('/')
 def index():
-    import pdb; pdb.set_trace()
+    #import pdb; pdb.set_trace()
     return render_template('index.html')
 
-@app.route('/logn', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     '''Process data for login'''
     if( request.method == "POST" ):
@@ -27,6 +26,9 @@ def login():
             if user:
                 if bcrypt.check_password_hash(user.password, request.form['password']):
                     session['user_id'] = user._id
+                    session['isAdmin'] = user.isAdmin
+                    session['isDoctor'] = user.isDoctor
+                    session['isInsurance'] = user.isInsurance
                     logger.debug("User logged in")
                 else:
                     logger.debug("Bad password")
@@ -37,12 +39,13 @@ def login():
 @app.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
     '''Process data for sign up'''
-    data = request.form
-    import pdb; pdb.set_trace()
+    data = request.form.to_dict()
+    #import pdb; pdb.set_trace()
     if(User.query.filter_by(email=data['email']).first()):
         logger.debug("Email already registered")
     else:
-        new_user = User(data['name'], data['surname'], bcrypt.generate_password_hash(data['password']), data['email'], data['phone'])
+        data['password']=bcrypt.generate_password_hash(data['password'])
+        new_user = User(**data)
         db.session.add(new_user)
         db.session.commit()
         logger.debug("New user registered")
@@ -63,8 +66,14 @@ def paid_action():
     return render_template('insurance_worker/paid_action_db.html')
 
 
-@app.route('/paid_action_new')
+@app.route('/paid_action_new', methods=['GET', 'POST'])
 def paid_action_new():
+    if( request.method == "POST" ):
+        if session['isAdmin'] == True or session['isInsurance']==True:
+            data = request.form.to_dict()
+            new_paid_action=PaymentTemplate(**data)
+            db.session.add(new_paid_action)
+            db.session.commit()
     return render_template('insurance_worker/manage_new_action.html')
 
 
@@ -78,8 +87,17 @@ def health_problem_old():
     return render_template('doctor_only/add_health_problem_registered_user.html')
 
 
-@app.route('/add_user')
+@app.route('/add_user', methods=['GET', 'POST'])
 def add_user():
+    if( request.method == "POST" and session['isAdmin'] == True):
+        data = request.form.to_dict()
+        if(User.query.filter_by(email=data['email']).first()):
+            logger.debug("Email already registered")
+        else:
+            data['password']=bcrypt.generate_password_hash(data['password'])
+            new_user = User(**data)
+            db.session.add(new_user)
+            db.session.commit()
     return render_template('admin_only/add_user.html')
 
 
@@ -91,12 +109,14 @@ def manage_paid_actions():
 
 
 
-@app.route('/ticket')
+@app.route('/ticket',  methods=['GET', 'POST'])
 def tickets():
+    #if request.method == 'POST' and (session['isAdmin'] == True or session['isDoctor'] == True):
+
     return render_template('medical_examination_ticket.html')
 
 
-@app.route('/problem_report')
+@app.route('/problem_report',  methods=['GET', 'POST'])
 def medical_report():
     return render_template('not_menu_accessible/problem_report.html')
 
@@ -111,10 +131,20 @@ def delegate():
     return render_template('doctor_only/delegate_problem.html')
 
 
-@app.route('/medical_report')
+@app.route('/medical_report',  methods=['GET', 'POST'])
 def medical_problem():
-    return render_template('not_menu_accessible/medical_report.html')
 
+    return render_template('not_menu_accessible/medical_report.html')
+@app.route('/medical_report_creator')
+def medical_report_creator():
+    if request.method == 'POST' and (session['isAdmin'] == True or session['isDoctor'] == True):
+        data = request.form.to_dict()
+        data['author']=session['user_id']
+        data['health_problem']=session['health_problem_id'] # -> toto třeba ještě dodat do session
+        medical_rep = MedicalReport(**data)
+        db.session.add(medical_rep)
+        db.session.commit()
+    return render_template('not_menu_accessible/medical_report_creator.html')
 @app.route('/medical_examinations')
 def medical_examinations():
     return render_template('doctor_only/medical_examinations.html')

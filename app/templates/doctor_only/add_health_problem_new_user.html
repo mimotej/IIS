@@ -4,22 +4,26 @@
 {% block content %}
     <div class="add-user-form">
         <div>
+            <label><b>Uživatel již registrován?</b></label>
+            <button class="button input-row" type="button" onclick="document.location = 'health_old';">Přidat</button>
+        </div>
+        <div>
             <label for="name"><b>Jméno</b></label>
-            <input type="text" placeholder="Zadejte své jméno" name="name" required>
+            <input type="text" placeholder="Zadejte své jméno" name="name">
         </div>
         <div>
             <label for="surname"><b>Příjmení</b></label>
-            <input type="text" placeholder="Zadejte své příjmení" name="surname" required>
+            <input type="text" placeholder="Zadejte své příjmení" name="surname">
         </div>
         <div>
             <label for="e-mail"><b>E-mail</b></label>
-            <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="e-mail" required>
+            <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="email" required>
         </div>
         <div><label for="password-reg"><b>Heslo</b></label>
-            <input type="password" placeholder="Zadejte heslo" name="password-reg" required>
+            <input type="password" placeholder="Zadejte heslo" name="password">
         </div>
         <div><label for="phone-reg"><b>Telefonní číslo</b></label>
-            <input type="tel" placeholder="Zadejte své telefonní číslo" name="phone-reg" pattern="[0-9]{9}">
+            <input type="tel" placeholder="Zadejte své telefonní číslo" name="phone" pattern="[0-9]{9}">
         </div>
         <div><label for="address"><b>Adresa</b></label>
             <input type="text" placeholder="Zadejte svou adresu" name="address">
@@ -30,8 +34,11 @@
         <div><label for="state"><b>Stav</b></label>
             <input type="text" placeholder="Zadejte stav" name="state">
         </div>
+        <div><label for="description"><b>Popis</b></label><br>
+            <textarea type="text" placeholder="Zadejte stav" name="description"></textarea>
+        </div>
         <div><label for="report"><b>Lékařská zpráva</b></label>
-            <input type="text" placeholder="Zadejte lékařskou zprávu" name="report">
+            <input type="file" placeholder="Zadejte lékařskou zprávu" name="report">
         </div>
         <div>
             <button class="button" type="submit">Vytvořit</button>

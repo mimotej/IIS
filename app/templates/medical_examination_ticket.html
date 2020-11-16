@@ -2,6 +2,7 @@
 {% set active_page="reports" %}
 {% extends "base.html" %}
 {% block content %}
+    <form method="post">
     <div class="new-ticket">
         <div>
             <label><b>ID doktora</b></label>
@@ -15,4 +16,5 @@
             <button class="button input-row" type="submit">Zadat</button>
         </div>
     </div>
+    </form>
 {% endblock %}

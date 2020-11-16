@@ -1,0 +1,17 @@
+<!--Přidání nové lékařské zprávy  -->
+{% set active_page="reports" %}
+{% extends "base.html" %}
+{% block content %}
+    <div class="add-user-form">
+
+        <div><label for="content"><b>Obsah</b></label><br>
+            <textarea type="text" placeholder="obsah" name="content"></textarea>
+        </div>
+        <div><label for="attachment"><b>Lékařská zpráva</b></label>
+            <input type="file" placeholder="Zadejte lékařskou zprávu" name="attachment">
+        </div>
+        <div>
+            <button class="button" type="submit">Vytvořit</button>
+        </div>
+    </div>
+{% endblock %}
