@@ -3,13 +3,17 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="report">
-        <div style="grid-area: name">
-            <label><b>ID :</b></label>
-            <div>Placeholder</div>
+        <div >
+            <label><b>Název :</b></label>
+            <div>{{e_request.name}}</div>
         </div>
-        <div style="grid-area: doctor">
+        <div >
+            <label><b>ID zdravotního problému:</b></label>
+            <div>{{e_request.health_problem_id}}</div>
+        </div>
+        <div >
             <label><b>Popis :</b></label>
-            <div>Placeholder</div>
+            <div>{{e_request.description}}</div>
         </div>
     </div>
 {% endblock %}

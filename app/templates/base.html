@@ -22,12 +22,12 @@
             <button class="btn btn-outline-light" type="submit">Search</button>
         </form>
     </div>
-    {#
+    
     {% if "user_id" in session %}
        {% include "user_logged.html" %}
-    {% else %} #}
+    {% else %} 
     {% include "login.html" %}
-    {# {% endif %} #}
+    {% endif %} 
 </nav>
 
 {% include "side_navbar.html" %}

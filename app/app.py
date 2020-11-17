@@ -162,7 +162,20 @@ def manage_paid_actions():
 
 @app.route('/ticket',  methods=['GET', 'POST'])
 def tickets():
-    #if request.method == 'POST' and (session['isAdmin'] == True or session['isDoctor'] == True):
+    problem_id =  request.args.get('p_id')
+    if request.method == 'POST' and (session['isAdmin'] == True or session['isDoctor'] == True):
+        data = request.form.to_dict()
+        new_ticket = ExaminationRequest(**data)
+        doctor = User.query.filter_by(_id=request.form['received_by']).first()
+        if doctor.isDoctor:
+            new_ticket.created_by = session['user_id']
+            new_ticket.received_by = request.form['received_by']
+            new_ticket.health_problem_id = problem_id 
+            new_ticket.state = "NOT DONE"
+            db.session.add(new_ticket)
+            db.session.commit()
+        else:
+            logger.debug("Error: not doctor ID")
 
     return render_template('medical_examination_ticket.html')
 
@@ -188,9 +201,7 @@ def not_found_404():
 def delegate():
     problem_id =  request.args.get('p_id')
     problem = HealthProblem.query.filter_by(_id=problem_id).first()
-    logger.debug("1")
     if (request.method == 'POST' and problem):
-        logger.debug("2")
         doctor = User.query.filter_by(_id=request.form['id_doctor']).first()
         if doctor and (session['isAdmin'] == True or session['isDoctor']==True):
             logger.debug(doctor._id)
@@ -221,11 +232,18 @@ def medical_report_creator():
     return render_template('not_menu_accessible/medical_report_creator.html')
 @app.route('/medical_examinations')
 def medical_examinations():
-    return render_template('doctor_only/medical_examinations.html')
+    requests = ExaminationRequest.query
+    return render_template('doctor_only/medical_examinations.html',requests = requests)
 
 @app.route('/medical_examination')
 def medical_examination():
-    return render_template('doctor_only/medical_examination.html')
+    if (session['isAdmin'] == True or session['isDoctor'] == True):
+        request_id =  request.args.get('r_id')
+        e_request = ExaminationRequest.query.filter_by(_id=request_id).first()
+        return render_template('doctor_only/medical_examination.html',e_request = e_request)
+    else :
+        logger.debug("Error: not admin or doctor")
+        return render_template('doctor_only/medical_examination.html',e_request = e_request)
 
 if __name__ == '__main__':
     db.create_all()

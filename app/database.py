@@ -10,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 db = SQLAlchemy(app)
 app.config['SECRET_KEY'] = 'a4b32a254b543f4d5e44ed255a4b22c1'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://flask:Password<3@127.0.0.1/IIS'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://flask:password@127.0.0.1/IIS'
 app.config['SECRET_KEY'] = '1f3118edada4643f34538ea423d32b21'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -80,22 +80,30 @@ class HealthProblem(db.Model):
                 self.doctor_id = value
 
 
+
 class ExaminationRequest(db.Model):
      __tablename__ = 'examination_request'
      _id = db.Column("id", db.Integer, primary_key=True)
      name = db.Column("name", db.String(64), nullable=False)
      description = db.Column("description", db.String(1024))
      state = db.Column("state", db.String(16), nullable=False)
-     created_by = db.Column("created_by", db.Integer)
-     works_on = db.Column("works_on", db.Integer)
-
-     def __init__(self, health_problem_id, name, state, created_by, works_on, description=None):
-         self.health_problem_id = health_problem_id
-         self.name = name
-         self.state = state
-         self.created_by = created_by
-         self.works_on = works_on
-         self.description = description
+     created_by = db.Column("created_by", db.Integer, db.ForeignKey('users._id'), nullable=False)
+     received_by= db.Column("received_by", db.Integer, db.ForeignKey('users._id'), nullable=False)
+     health_problem_id= db.Column("health_problem_id", db.Integer, db.ForeignKey('health_problems._id'), nullable=False)
+     def __init__(self,**kwargs):
+         for key, value in kwargs.items():
+           if key =="health_problem":
+             self.health_problem_id = value
+           if key =="name":
+             self.name=value
+           if key == "state":
+             self.state = value
+           if key == "id_doctor":
+             self.created_by = value
+           if key == "id":
+             self.received_by= value
+           if key == "description":
+             self.description = value
 
 
 class MedicalReport(db.Model):

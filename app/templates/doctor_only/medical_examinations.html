@@ -7,7 +7,7 @@
             <thead>
             <tr>
                 <th scope="col" style="width: 140px">ID</th>
-                <th scope="col" style="width: 200px">Popis</th>
+                <th scope="col" style="width: 200px">Název</th>
                 <th style="width: 100px"></th>
             </tr>
             </thead>
@@ -21,19 +21,14 @@
                 </td>
             </tr>
             <tr>
-                <th scope="row" onclick="document.location = 'medical_examination';">1</th>
-                <td onclick="document.location = 'medical_examination';" style="cursor: pointer">Prvni</td>
+                {% for request in requests%}
+                <th scope="row" onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;">{{request._id}}</th>
+                <td onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;" style="cursor: pointer">{{request.name}}</td>
                 <td></td>
             </tr>
-            <!-- možná ukázka generování kódu -->
-            <!--{#% for row in rows %#}
-    <tr>
-        <th scope="row">{row.id}</th>
-        <td>{#{ row.product_code }#}</td>
-        <td>{#{# row.product_code }#}</td>
-        <td></td>
-    </tr>*-->
-            {#% endfor %#}
+            {% endfor %}
+            
+            
             </tbody>
         </table>
     </div>
