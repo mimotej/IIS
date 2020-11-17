@@ -5,24 +5,24 @@
     <div class="problem">
         <div style="text-align: right; grid-area: top-button">
             <button class="button" style="width: 100px;" type="submit"
-                    onclick="document.location = 'delegate_problem';">Předat
+                    onclick="document.location = 'delegate_problem?p_id=' + {{problem._id}} ;">Předat
             </button>
         </div>
         <div style="grid-area: name">
             <label><b>Název :</b></label>
-            <div>Placeholder</div>
+            <div>{{problem.name}}</div>
         </div>
         <div style="grid-area: state">
             <label><b>Stav :</b></label>
-            <div>Placeholder</div>
+            <div>{{problem.state}}</div>
         </div>
         <div style="grid-area: doctor">
             <label><b>Ošetřující lékař :</b></label>
-            <div>Placeholder</div>
+            <div>{{doctor}}</div>
         </div>
         <div style="grid-area: description">
             <label><b>Popis :</b></label>
-            <div>Placeholder</div>
+            <div>{{problem.description}}</div>
         </div>
         <div style="grid-area: attachment">
             <label><b>Lékařské zprávy :</b></label>

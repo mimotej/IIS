@@ -27,15 +27,18 @@
                     <button class="button input-row" type="submit">Hledat</button>
                 </td>
             </tr>
+            
             <tr style="cursor:pointer">
-                <th scope="row" onclick="document.location = 'problem_report';">1</th>
-                <td onclick="document.location = 'problem_report';">Prvni</td>
-                <td onclick="document.location = 'problem_report';">Druhy</td>
-                <td onclick="document.location = 'problem_report';">Treti</td>
-                <td onclick="document.location = 'problem_report';">Ctvrty</td>
+            {% for problem in problems %}
+                <th scope="row" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{ loop.index}}</th>
+                <td onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.name}}</td>
+                <td onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.state}}</td>
+                <td onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">TODO</td>
+                <td onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.description}}</td>
                 <td>
                 </td>
             </tr>
+            {%endfor%}
                         <tr style="cursor:pointer">
                 <th></th>
                 <td></td>

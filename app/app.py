@@ -13,7 +13,15 @@ app.permanent_session_lifetime = timedelta(minutes=30)
 @app.route('/')
 def index():
     #import pdb; pdb.set_trace()
-    return render_template('index.html')
+    if session['isAdmin']:
+        problems = HealthProblem.query
+        return render_template('index.html',problems = problems)
+    elif session['isDoctor']:
+        problems = HealthProblem.query.filter_by(doctor_id=session['user_id'])
+        return render_template('index.html',problems = problems)
+    else :
+        problems = HealthProblem.query.filter_by(patient_id=session['user_id'])
+        return render_template('index.html',problems = problems)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -103,6 +111,7 @@ def health_problem():
             if user:
                 new_problem.patient_id = user._id
                 new_problem.doctor_id = session['user_id']
+                new_problem.name = request.form['name_problem']
                 db.session.add(new_problem)
                 db.session.commit()
             else:
@@ -160,7 +169,14 @@ def tickets():
 
 @app.route('/problem_report',  methods=['GET', 'POST'])
 def medical_report():
-    return render_template('not_menu_accessible/problem_report.html')
+    problem_id =  request.args.get('p_id')
+    problem = HealthProblem.query.filter_by(_id=problem_id).first()
+    if problem:
+        if (session['isAdmin'] == True or problem.patient_id == session['user_id'] or problem.doctor_id == session['user_id']):
+            doctor = User.query.filter_by(_id=problem.doctor_id).first()
+            if doctor:
+                return render_template('not_menu_accessible/problem_report.html',problem = problem,doctor = doctor.name)
+    
 
 
 @app.route('/404')
@@ -168,9 +184,25 @@ def not_found_404():
     return render_template('404_not_found.html')
 
 
-@app.route('/delegate_problem')
+@app.route('/delegate_problem',  methods=['GET', 'POST'])
 def delegate():
-    return render_template('doctor_only/delegate_problem.html')
+    problem_id =  request.args.get('p_id')
+    problem = HealthProblem.query.filter_by(_id=problem_id).first()
+    logger.debug("1")
+    if (request.method == 'POST' and problem):
+        logger.debug("2")
+        doctor = User.query.filter_by(_id=request.form['id_doctor']).first()
+        if doctor and (session['isAdmin'] == True or session['isDoctor']==True):
+            logger.debug(doctor._id)
+            problem.doctor_id = doctor._id
+            db.session.delete(problem)
+            db.session.add(problem)
+            db.session.commit()
+            return render_template('doctor_only/delegate_problem.html')
+
+            
+    else:
+         return render_template('doctor_only/delegate_problem.html')
 
 
 @app.route('/medical_report',  methods=['GET', 'POST'])
