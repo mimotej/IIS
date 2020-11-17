@@ -2,6 +2,7 @@
 {% set active_page="reports" %}
 {% extends "base.html" %}
 {% block content %}
+    <form method="post">
     <div class="add-user-form">
         <div>
             <label for="name"><b>ID</b></label>
@@ -10,4 +11,6 @@
                 <button class="button" type="submit">Předat</button>
             </div>
         </div>
+    </div>
+    </form>
 {% endblock %}

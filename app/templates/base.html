@@ -22,7 +22,13 @@
             <button class="btn btn-outline-light" type="submit">Search</button>
         </form>
     </div>
-    {% include "login.html" %}</nav>
+    {% if "user_id" in session %}
+        {% include "user_logged.html" %}
+    {% else %}
+    {% include "login.html" %}
+    {% endif %}
+</nav>
+
 {% include "side_navbar.html" %}
 <div id="content">{% block content %}{% endblock %}</div>
 {% include "register_form.html" %}
