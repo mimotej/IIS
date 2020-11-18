@@ -9,7 +9,7 @@ from database import db, app
 bcrypt = Bcrypt(app)
 
 app.permanent_session_lifetime = timedelta(minutes=30)
-
+app.jinja_env.globals.update(zip=zip)
 @app.route('/')
 def index():
     #import pdb; pdb.set_trace()
@@ -161,10 +161,12 @@ def add_user():
 def manage_paid_actions():
     p_requests = PaymentRequest.query
     p_templates = PaymentTemplate.query
+    p_doctor = {}
     templates=[]
     for req in p_requests:
         templates.append(PaymentTemplate.query.filter_by(_id=req.template).first())
-    return render_template('insurance_worker/manage_paid_actions.html', p_requests = p_requests, p_templates = p_templates,templates = templates)
+        p_doctor[req._id]=User.query.filter_by(_id=req.creator).first().name
+    return render_template('insurance_worker/manage_paid_actions.html', p_requests = p_requests, p_templates = p_templates,templates = templates, p_doctor=p_doctor)
 
 
 

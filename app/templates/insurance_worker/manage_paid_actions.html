@@ -9,7 +9,9 @@
                 <th scope="col" style="width: 140px">ID</th>
                 <th scope="col" style="width: 200px">Název</th>
                 <th scope="col" style="width: 120px">Cena</th>
-                <th scope="col" style="width: 100px">Typ</th>
+                <th scope="col" style="width: 120px">Typ</th>
+                <th scope="col" style="width: 180px">Žadatel</th>
+                <th scope="col" style="width: 100px">Stav</th>
                 <th style="width: 100px"></th>
             </tr>
             </thead>
@@ -20,16 +22,20 @@
                 <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
                 <td><input style="border-radius: 0;" type="text" placeholder="" name="state" class="input-row"></td>
                 <td><input style="border-radius: 0;" type="text" placeholder="" name="type" class="input-row"></td>
+                <td><input style="border-radius: 0;" type="text" placeholder="" name="creator" class="input-row"></td>
+                <td><input style="border-radius: 0;" type="text" placeholder="" name="state" class="input-row"></td>
                 <td> 
                     <button class="button input-row" type="submit">Hledat</button>
                 </td>
             </tr>
             <tr>
-                {% for p_request in templates %}
+                {% for p_request,p_req in zip(templates,p_requests) %}
                 <th scope="row">{{p_request._id}}</th>
                 <td>{{p_request.Name}}</td>
                 <td>{{p_request.Price}}</td>
                 <td>{{p_request.Type}}</td>
+                <td>{{p_doctor[p_req._id]}}</td>
+                <td>{{p_req.state}}</td>
                 <td style="padding-top: 0; padding-bottom: 0"><span style="font-size: 32px;">&#10003;</span> <span
                         style="font-size: 32px; padding-left: 15px;">&times;</span></td>
             </tr>
