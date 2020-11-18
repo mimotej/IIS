@@ -1,0 +1,16 @@
+<!--Předat zdravotní problém  -->
+{% set active_page="reports" %}
+{% extends "base.html" %}
+{% block content %}
+    <form method="post">
+    <div class="add-user-form">
+        <div>
+            <label for="name"><b>ID</b></label>
+            <input type="text" placeholder="Zadejte ID zákroku" name="medical_intervention" required>
+            <div>
+                <button class="button" type="submit">Požádat</button>
+            </div>
+        </div>
+    </div>
+    </form>
+{% endblock %}

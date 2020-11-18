@@ -13,6 +13,7 @@ app.permanent_session_lifetime = timedelta(minutes=30)
 @app.route('/')
 def index():
     #import pdb; pdb.set_trace()
+  try:
     if session['isAdmin']:
         problems = HealthProblem.query
         return render_template('index.html',problems = problems)
@@ -22,6 +23,8 @@ def index():
     else :
         problems = HealthProblem.query.filter_by(patient_id=session['user_id'])
         return render_template('index.html',problems = problems)
+  except :
+      return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -234,7 +237,9 @@ def medical_report_creator():
 def medical_examinations():
     requests = ExaminationRequest.query
     return render_template('doctor_only/medical_examinations.html',requests = requests)
-
+@app.route('/payment_request')
+def payment_request():
+    return render_template('doctor_only/payment_request.html')
 @app.route('/medical_examination')
 def medical_examination():
     if (session['isAdmin'] == True or session['isDoctor'] == True):

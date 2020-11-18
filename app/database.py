@@ -83,7 +83,7 @@ class HealthProblem(db.Model):
 
 class ExaminationRequest(db.Model):
      __tablename__ = 'examination_request'
-     _id = db.Column("id", db.Integer, primary_key=True)
+     _id = db.Column(db.Integer, primary_key=True)
      name = db.Column("name", db.String(64), nullable=False)
      description = db.Column("description", db.String(1024))
      state = db.Column("state", db.String(16), nullable=False)
@@ -111,9 +111,9 @@ class MedicalReport(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(1024))
     attachement = db.Column(db.String(1024))
-    health_problem = db.Column(db.ForeignKey('HealthProblem.id'), nullable=False)
-    author = db.Column(db.ForeignKey('User.id'), nullable=False)
-    examination_request = db.Column(db.ForeignKey('ExaminationRequest.id'))
+    health_problem = db.Column(db.ForeignKey('health_problems._id'), nullable=False)
+    author = db.Column(db.ForeignKey('users._id'), nullable=False)
+    examination_request = db.Column("health_problem_id", db.Integer, db.ForeignKey('health_problems._id'), nullable=False)
 
     def __init__(self,**kwargs):
         for key, value in kwargs.items():
@@ -128,8 +128,9 @@ class MedicalReport(db.Model):
             elif key == "examination_request":
                 self.examination_request = value
 #Je toto potřeba záznam z vyšetření by měla být zpráva a podání žádosti o proplacení to níže...
+#Asi to tu nemá být ale zatím to tu nechám projistotu...
 class MedicalIntervention(db.Model):
-    __tablename__ = 'medical_intervention'
+    __tablename__ = 'medical_inervention'
     _id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(256))
     executor = db.Column(db.String(256), nullable=False)
@@ -143,21 +144,24 @@ class MedicalIntervention(db.Model):
 class PaymentRequest(db.Model):
     __tablename__ = 'payment_request'
     _id = db.Column(db.Integer, primary_key=True)
-    medical_intervention = db.Column(db.Integer, nullable=False)
-    creator = db.Column(db.Integer, nullable=False)
-    validator = db.Column(db.Integer, nullable=False)
-    examination_request = db.Column(db.Integer, nullable=False)
+    medical_intervention = db.Column("medical_intervention", db.Integer, db.ForeignKey('payment_template._id'), nullable=False)#žádost na konkrétní typ zákroku
+    creator = db.Column("creator", db.Integer, db.ForeignKey('users._id'), nullable=False)
+    validator = db.Column("validator", db.Integer, db.ForeignKey('users._id'), nullable=False)
+    examination_request = db.Column("examination_request", db.Integer, db.ForeignKey('examination_request._id'), nullable=False)
     state = db.Column(db.Integer, nullable=False)
-    pay_method = db.Column(db.String(32), nullable=False)
 
-    def __init__(self, medical_intervention, creator, validator,
-                 examination_request, state, pay_method):
-        self.medical_intervention = medical_intervention
-        self.creator = creator
-        self.validator = validator
-        self.examination_request = examination_request
-        self.state = state
-        self.pay_method = pay_method
+    def __init__(self,**kwargs):
+        for key, value in kwargs.items():
+            if key == "medical_intervention":
+                self.medical_intervention = value
+            elif key == "creator":
+                self.creator = value
+            elif key == "validator":
+                self.validator = value
+            elif key == "examination_request":
+                self.examination_request = value
+            elif key == "state":
+                self.state = value
 class PaymentTemplate(db.Model):
     __tablename__ = 'payment_template'
     _id = db.Column(db.Integer, primary_key=True)
