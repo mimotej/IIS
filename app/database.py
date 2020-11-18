@@ -10,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 db = SQLAlchemy(app)
 app.config['SECRET_KEY'] = 'a4b32a254b543f4d5e44ed255a4b22c1'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://flask:password@127.0.0.1/IIS'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://flask:assword@127.0.0.1/IIS'
 app.config['SECRET_KEY'] = '1f3118edada4643f34538ea423d32b21'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -83,7 +83,7 @@ class HealthProblem(db.Model):
 
 class ExaminationRequest(db.Model):
      __tablename__ = 'examination_request'
-     _id = db.Column(db.Integer, primary_key=True)
+     id = db.Column(db.Integer, primary_key=True)
      name = db.Column("name", db.String(64), nullable=False)
      description = db.Column("description", db.String(1024))
      state = db.Column("state", db.String(16), nullable=False)
@@ -144,16 +144,19 @@ class MedicalIntervention(db.Model):
 class PaymentRequest(db.Model):
     __tablename__ = 'payment_request'
     _id = db.Column(db.Integer, primary_key=True)
-    medical_intervention = db.Column("medical_intervention", db.Integer, db.ForeignKey('payment_template._id'), nullable=False)#žádost na konkrétní typ zákroku
+    #medical_intervention = db.Column("medical_intervention", db.Integer, db.ForeignKey('payment_template._id'), nullable=True)#žádost na konkrétní typ zákroku
+    template = db.Column("payment_template", db.Integer, db.ForeignKey('payment_template._id'), nullable=False)
     creator = db.Column("creator", db.Integer, db.ForeignKey('users._id'), nullable=False)
     validator = db.Column("validator", db.Integer, db.ForeignKey('users._id'), nullable=False)
-    examination_request = db.Column("examination_request", db.Integer, db.ForeignKey('examination_request._id'), nullable=False)
-    state = db.Column(db.Integer, nullable=False)
+    examination_request = db.Column("examination_request", db.Integer, db.ForeignKey('examination_request.id'), nullable=False)
+    state = db.Column(db.String(256), nullable=True)
 
     def __init__(self,**kwargs):
         for key, value in kwargs.items():
-            if key == "medical_intervention":
-                self.medical_intervention = value
+            #if key == "medical_intervention":
+            #    self.medical_intervention = value
+            if key == "template":
+                self.template = value
             elif key == "creator":
                 self.creator = value
             elif key == "validator":

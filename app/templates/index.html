@@ -30,7 +30,7 @@
             
             <tr style="cursor:pointer">
             {% for problem in problems %}
-                <th scope="row" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{ loop.index}}</th>
+                <th scope="row" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{ problem._id}}</th>
                 <td onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.name}}</td>
                 <td onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.state}}</td>
                 <td onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">TODO</td>

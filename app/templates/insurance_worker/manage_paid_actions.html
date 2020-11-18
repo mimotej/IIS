@@ -20,18 +20,20 @@
                 <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
                 <td><input style="border-radius: 0;" type="text" placeholder="" name="state" class="input-row"></td>
                 <td><input style="border-radius: 0;" type="text" placeholder="" name="type" class="input-row"></td>
-                <td>
+                <td> 
                     <button class="button input-row" type="submit">Hledat</button>
                 </td>
             </tr>
             <tr>
-                <th scope="row">1</th>
-                <td>Prvni</td>
-                <td>Druhy</td>
-                <td>Druhy</td>
+                {% for p_request in templates %}
+                <th scope="row">{{p_request._id}}</th>
+                <td>{{p_request.Name}}</td>
+                <td>{{p_request.Price}}</td>
+                <td>{{p_request.Type}}</td>
                 <td style="padding-top: 0; padding-bottom: 0"><span style="font-size: 32px;">&#10003;</span> <span
                         style="font-size: 32px; padding-left: 15px;">&times;</span></td>
             </tr>
+            {%endfor%}
             <!-- možná ukázka generování kódu -->
             <!--{#% for row in rows %#}
     <tr>

@@ -24,13 +24,17 @@
                     <button class="button input-row" type="submit">Hledat</button>
                 </td>
             </tr>
+            
+                
+            {% for p_template in p_templates %}
             <tr>
-                <th scope="row">1</th>
-                <td>Prvni</td>
-                <td>Druhy</td>
-                <td>Druhy</td>
+                <th scope="row">{{p_template._id}}</th>
+                <td>{{p_template.Name}}</td>
+                <td>{{p_template.Price}}</td>
+                <td>{{p_template.Type}}</td>
                 <td></td>
             </tr>
+            {%endfor%}
             <!--Možná ukázka generování kódu do tabulky -->
             <!--{#% for row in rows %#}
     <tr>

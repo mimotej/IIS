@@ -22,8 +22,8 @@
             </tr>
             <tr>
                 {% for request in requests%}
-                <th scope="row" onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;">{{request._id}}</th>
-                <td onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;" style="cursor: pointer">{{request.name}}</td>
+                <th scope="row" onclick="document.location = 'medical_examination?r_id=' + {{request.id}} ;">{{request.id}}</th>
+                <td onclick="document.location = 'medical_examination?r_id=' + {{request.id}} ;" style="cursor: pointer">{{request.name}}</td>
                 <td></td>
             </tr>
             {% endfor %}

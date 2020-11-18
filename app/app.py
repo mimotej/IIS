@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session 
 
 from database import *
 from datetime import timedelta
@@ -79,7 +79,8 @@ def manage_users():
 
 @app.route('/paid_action_db')
 def paid_action():
-    return render_template('insurance_worker/paid_action_db.html')
+    p_templates = PaymentTemplate.query
+    return render_template('insurance_worker/paid_action_db.html', p_templates = p_templates)
 
 
 @app.route('/paid_action_new', methods=['GET', 'POST'])
@@ -90,6 +91,7 @@ def paid_action_new():
             new_paid_action=PaymentTemplate(**data)
             db.session.add(new_paid_action)
             db.session.commit()
+            logger.debug("ahoj")
     return render_template('insurance_worker/manage_new_action.html')
 
 
@@ -157,7 +159,12 @@ def add_user():
 
 @app.route('/manage_paid_actions')
 def manage_paid_actions():
-    return render_template('insurance_worker/manage_paid_actions.html')
+    p_requests = PaymentRequest.query
+    p_templates = PaymentTemplate.query
+    templates=[]
+    for req in p_requests:
+        templates.append(PaymentTemplate.query.filter_by(_id=req.template).first())
+    return render_template('insurance_worker/manage_paid_actions.html', p_requests = p_requests, p_templates = p_templates,templates = templates)
 
 
 
@@ -237,14 +244,27 @@ def medical_report_creator():
 def medical_examinations():
     requests = ExaminationRequest.query
     return render_template('doctor_only/medical_examinations.html',requests = requests)
-@app.route('/payment_request')
+
+@app.route('/payment_request',  methods=['GET', 'POST'])
 def payment_request():
+    if request.method == 'POST' and (session['isAdmin'] == True or session['isInsurance'] == True):
+        data = request.form.to_dict()
+        new_payment_request = PaymentRequest(**data)
+        new_payment_request.creator = session['user_id']
+        new_payment_request.state = "waiting"
+        new_payment_request.examination_request = session['examination_request']
+        new_payment_request.template = request.form['template']
+        new_payment_request.validator = 1 # je to vzdy 1 <- musi se to nejak upravit at je to korektne
+        db.session.add(new_payment_request)
+        db.session.commit()
     return render_template('doctor_only/payment_request.html')
+
 @app.route('/medical_examination')
 def medical_examination():
     if (session['isAdmin'] == True or session['isDoctor'] == True):
         request_id =  request.args.get('r_id')
-        e_request = ExaminationRequest.query.filter_by(_id=request_id).first()
+        session['examination_request'] = request_id 
+        e_request = ExaminationRequest.query.filter_by(id=request_id).first()
         return render_template('doctor_only/medical_examination.html',e_request = e_request)
     else :
         logger.debug("Error: not admin or doctor")
