@@ -2,37 +2,48 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="no-edit-user-form-container">
+      <form action="{{ url_for('user') }}" method="post">
         <div class="no-edit-user-form">
+            {% if user %}
             <div id="pencil"><a href="#edit_form"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></div>
             <div class="user-form-item"><label id="custom-label" for="name"><b>Jméno :</b></label><input type="text"
                                                                                                          id="edit-user-form"
                                                                                                          placeholder=""
                                                                                                          class="edit-user-form-input"
                                                                                                          name="name"><span
-                    id="edit-user-form" class="edit-user-form-input" style="display: block">{{name}}</span></div>
+                    id="edit-user-form" class="edit-user-form-input" style="display: block">{{user.name}}</span></div>
             <div class="user-form-item"><label id="custom-label" for="surname"><b>Příjmení :</b></label><input
                     type="text" id="edit-user-form" placeholder="" class="edit-user-form-input" name="surname"><span
-                    id="edit-user-form" class="edit-user-form-input" style="display: block">{{surname}}</span></div>
+                    id="edit-user-form" class="edit-user-form-input" style="display: block">{{user.surname}}</span></div>
             <div class="user-form-item"><label id="custom-label" for="email"><b>Email :</b></label><input type="email"
                                                                                                           id="edit-user-form"
                                                                                                           placeholder=""
                                                                                                           class="edit-user-form-input"
                                                                                                           name="email"><span
-                    id="edit-user-form" class="edit-user-form-input" style="display: block">{{email}}</span></div>
+                    id="edit-user-form" class="edit-user-form-input" style="display: block">{{user.email}}</span></div>
             <div class="user-form-item"><label id="custom-label" for="tel-number"><b>Telefonní číslo :</b></label><input
-                    type="email" id="edit-user-form" placeholder="" class="edit-user-form-input" name="tel-number"><span
-                    id="edit-user-form" class="edit-user-form-input" style="display: block">{{phone}}</span></div>
+                    type="tel" pattern="[0-9]{9}" id="edit-user-form" placeholder="" class="edit-user-form-input" name="phone"><span
+                    id="edit-user-form" class="edit-user-form-input" style="display: block">{{user.phone}}</span></div>
             <div class="user-form-item"><label id="custom-label" for="home"><b>Bydliště :</b></label><input type="text"
                                                                                                             id="edit-user-form"
                                                                                                             placeholder=""
                                                                                                             class="edit-user-form-input"
-                                                                                                            name="home"><span
+                                                                                                            name="address"><span
                     id="edit-user-form" class="edit-user-form-input" style="display: block">Placeholder</span></div>
             <button id="edit-user-form" class="button edit-user-form-input button-edit-user-form-input" type="submit">
                 Změnit
             </button>
         </div>
-
-
+        </form>
+        {% if my_user %}
+        <button onclick="document.location = 'logout';">
+                Odhlásit se
+        </button>
+        {% endif %}
+    </div>
+            {% else %}
+                <h>User not found</h>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}

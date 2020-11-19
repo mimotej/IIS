@@ -26,7 +26,7 @@
                 <th scope="row">{{ loop.index}}</th>
                 <td>{{user.surname}}</td>
                 <td>{{user.email}}</td>
-                <td></td>
+                <td><form action="{{url_for('update_user', id=user._id)}}"><button type="submit" onclick="{{user.url}}">Upravit</button></form></td>
             </tr>
             {%endfor%}
             <!--{#% for row in rows %#}
