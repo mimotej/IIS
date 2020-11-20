@@ -12,7 +12,6 @@ app.jinja_env.globals.update(zip=zip)
 
 # List of keys set during session
 SESSION_USER_DATA = ['isAdmin', 'isDoctor', 'isInsurance', 'user_id']
-# TODO logout
 
 
 @app.route('/')
@@ -36,6 +35,7 @@ def logout():
     '''Log out user'''
     for item in SESSION_USER_DATA:
         session.pop(item)
+    logger.debug("User logged out")  # TODO replace with flash messages
     return redirect(url_for('index'))
 
 
@@ -63,7 +63,7 @@ def sign_up():
         logger.debug("Email already registered")  # TODO replace with flash messages
     else:
         data['password'] = bcrypt.generate_password_hash(data['password'])
-        add_row(User, data)
+        add_row(User, **data)
         logger.debug("New user registered")  # TODO replace with flash messages
     return redirect(url_for('index'))
 
@@ -97,7 +97,7 @@ def paid_action():
 def paid_action_new():
     if( request.method == "POST" ):
         if session['isAdmin'] or session['isInsurance']:
-            add_row(PaymentTemplate, request.form.to_dict())
+            add_row(PaymentTemplate, **request.form.to_dict())
             logger.debug("New paid action created")    # TODO replace with flash messages
     return render_template('insurance_worker/manage_new_action.html')
 
@@ -158,7 +158,7 @@ def add_user():
             logger.debug("Email already registered")  # TODO replace with flash messages
         else:
             data['password']=bcrypt.generate_password_hash(data['password'])
-            add_row(User, data)
+            add_row(User, **data)
     return render_template('admin_only/add_user.html')
 
 ### ???

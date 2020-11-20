@@ -23,7 +23,7 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(50), nullable=False, unique=True)
     phone = db.Column(db.String(50), nullable=False)
-    adress = db.Column(db.String(100))
+    address = db.Column(db.String(100))
     birth_date = db.Column(db.DateTime)
     isAdmin = db.Column("isAdmin", db.Boolean(), default=False)
     isDoctor = db.Column("isDoctor", db.Boolean(), default=False)
@@ -35,9 +35,9 @@ class User(db.Model):
         self.password = data.get('password')
         self.email = data.get('email')
         self.phone = data.get('phone')
-        self.isInsurance = data.get('isInsurance')
-        self.isAdmin = data.get('isAdmin')
-        self.isDoctor = data.get('isDoctor')
+        self.isInsurance = data.get('isInsurance') == "True"
+        self.isAdmin = data.get('isAdmin') == "True"
+        self.isDoctor = data.get('isDoctor') == "True"
     
     def login_dict(self):
         return {
@@ -46,6 +46,14 @@ class User(db.Model):
             'isDoctor': self.isDoctor,
             'isInsurance': self.isInsurance
         }
+    
+    def update(self, **kwargs):
+        self.name = kwargs.get('name', self.name)
+        self.surname = kwargs.get('surname', self.surname)
+        self.email = kwargs.get('email', self.email)
+        self.phone = kwargs.get('phone', self.phone)
+        self.address = kwargs.get('address', self.address)
+        db.session.commit()
 
 
 class HealthProblem(db.Model):
