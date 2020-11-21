@@ -11,4 +11,8 @@
             href="paid_action_db">Databáze úkonů</a></div>
     <div class="hover-button {% if active_page=="manage_paid_action" %}active {% endif %}side-navbar-cell"><a
             href="manage_paid_actions">Správa úkonů</a></div>
+    {% if "user_id" in session %}
+    <div class="hover-button side-navbar-cell"><a
+            href="logout">Odhlásit se</a></div>
+    {% endif %}
 </nav>

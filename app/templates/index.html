@@ -27,19 +27,20 @@
                     <button class="button input-row" type="submit">Hledat</button>
                 </td>
             </tr>
-            
-            <tr style="cursor:pointer">
+
             {% for problem in problems %}
-                <th scope="row" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{ problem._id}}</th>
-                <td onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.name}}</td>
-                <td onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.state}}</td>
-                <td onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">TODO</td>
-                <td onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.description}}</td>
-                <td>
+                <tr style="cursor:pointer">
+                <th class="custom-button" scope="row" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{ problem._id}}</th>
+                <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.name}}</td>
+                <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.state}}</td>
+                <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">TODO</td>
+                <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.description}}</td>
+                <td  class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;"class="">
+                   Detail
                 </td>
             </tr>
             {%endfor%}
-                        <tr style="cursor:pointer">
+                        <tr>
                 <th></th>
                 <td></td>
                 <td></td>

@@ -120,6 +120,15 @@ def paid_action_new():
             logger.debug("New paid action created")    # TODO replace with flash messages
     return render_template('insurance_worker/manage_new_action.html')
 
+@app.route('/process_request_payment_approved/<int:payment_id>')
+def process_request_approved_payment(payment_id):
+    print(payment_id)
+    return redirect(url_for('index'))
+
+@app.route('/process_request_payment_not_approved/<int:payment_id>')
+def process_request_not_approved_payment(payment_id):
+    print(payment_id)
+    return redirect(url_for('index'))
 ### ???
 @app.route('/health', methods=['GET', 'POST'])
 def health_problem():
@@ -267,8 +276,12 @@ def medical_report_creator(health_problem_id):
 
 @app.route('/medical_examinations')
 def medical_examinations():
+    health_problem_names={}
+    for request in ExaminationRequest.query:
+        health_problem_names[request.id]= ExaminationRequest.query.filter_by(id=request.health_problem_id).first().name
+        print(health_problem_names[request.id])
     return render_template('doctor_only/medical_examinations.html',
-                           requests=ExaminationRequest.query)
+                           requests=ExaminationRequest.query, health_problem_names=health_problem_names)
 
 ### TODO Refactor adding table row
 @app.route('/payment_request',  methods=['GET', 'POST'])

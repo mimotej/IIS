@@ -59,6 +59,9 @@ class User(db.Model):
         self.email = kwargs['email'] if kwargs.get('email') else self.email
         self.phone = kwargs['phone'] if kwargs.get('phone') else self.phone
         self.address = kwargs['address'] if kwargs.get('address') else self.address
+        self.isAdmin == kwargs['isadmin'] == "True"  if kwargs.get('isadmin') else self.isAdmin
+        self.isDoctor = kwargs['isdoctor'] =="True" if kwargs.get('isdoctor') else self.isDoctor
+        self.isInsurance == kwargs['isinsurance'] == "True"  if kwargs.get('isinsurance') else self.isAdmin
         logger.debug(kwargs)
         db.session.commit()
 

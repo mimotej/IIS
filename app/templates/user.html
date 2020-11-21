@@ -5,7 +5,7 @@
       <form action="{{ url_for('user') }}" method="post">
         <div class="no-edit-user-form">
             {% if user %}
-            <div id="pencil"><a href="#edit_form"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></div>
+            <div id="pencil" class="edit-text"><a href="#edit_form"><i class="fa fa-pencil-square-o fa-2x" style="padding-left: 15px;" aria-hidden="true"></i><br />Editovat</a></div>
             <div class="user-form-item"><label id="custom-label" for="name"><b>Jméno :</b></label><input type="text"
                                                                                                          id="edit-user-form"
                                                                                                          placeholder=""
@@ -28,22 +28,43 @@
                                                                                                             id="edit-user-form"
                                                                                                             placeholder=""
                                                                                                             class="edit-user-form-input"
-                                                                                                            name="address"><span
-                    id="edit-user-form" class="edit-user-form-input" style="display: block">Placeholder</span></div>
+                                                                                                            name="address" ><span
+                    id="edit-user-form" class="edit-user-form-input" style="display: block">{{ user.address }}</span></div>
+                            <div class="user-form-item"><label id="custom-label" for="home"><b>Admin :</b></label><input type="checkbox"
+                                                                                                            id="edit-user-form"
+                                                                                                            placeholder=""
+                                                                                                            class="edit-user-form-input"
+                                                                                                            name="isadmin" {% if user.isAdmin == True %}checked{% endif %} value="True"><span
+                    id="edit-user-form" class="edit-user-form-input" style="display: block; font-size: 32px" >{% if user.isAdmin == True %}&#10003;{% else %}&times;{% endif %}</span></div>
+                            <div class="user-form-item"><label id="custom-label" for="home"><b>Doktor :</b></label><input type="checkbox"
+                                                                                                            id="edit-user-form"
+                                                                                                            placeholder=""
+                                                                                                            class="edit-user-form-input"
+                                                                                                            name="isdoctor" {% if user.isDoctor == True %}checked{% endif %} value="True"><span
+                    id="edit-user-form" class="edit-user-form-input" style="display: block; font-size: 32px" >{% if user.isDoctor == True %}&#10003;{% else %}&times;{% endif %}</span></div>
+                                            <div class="user-form-item"><label id="custom-label" for="home"><b>Pojišťovna :</b></label><input type="checkbox"
+                                                                                                            id="edit-user-form"
+                                                                                                            placeholder=""
+                                                                                                            class="edit-user-form-input"
+                                                                                                            name="isinsurance" {% if user.isInsurance == True %}checked{% endif %} value="True"><span
+                    id="edit-user-form" class="edit-user-form-input" style="display: block; font-size: 32px" ">{% if user.isInsurance == True %}&#10003;{% else %}&times;{% endif %}</span></div>
             <button id="edit-user-form" class="button edit-user-form-input button-edit-user-form-input" type="submit">
                 Změnit
             </button>
         </div>
         </form>
+                <!-- not sure what it does so I will leave it here but delete later!
         {% if my_user %}
         <button onclick="document.location = 'logout';">
                 Odhlásit se
-        </button>
+        </button>-->
         {% endif %}
     </div>
+                <!--
             {% else %}
                 <h>User not found</h>
             {% endif %}
+            -->
         </div>
     </div>
 {% endblock %}
