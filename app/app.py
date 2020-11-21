@@ -67,13 +67,32 @@ def sign_up():
         logger.debug("New user registered")  # TODO replace with flash messages
     return redirect(url_for('index'))
 
-@app.route('/user')
+@app.route('/user', methods=['GET', 'POST'])
 def user():
     '''Show user info'''
-    # TODO user not logged in scenerio not coverd in user.html
     user = User.query.filter_by(_id=session.get('user_id')).first()
-    return render_template('user.html', user=user)
+    if request.method == 'POST':
+        user.update(**request.form.to_dict())
+    # TODO user not logged in scenerio not coverd in user.html
+    return render_template('user.html', user=user, my_user=True)
 
+@app.route('/manage_users/<int:id>', methods=['GET', 'POST'])
+def redirect_user(id):
+    '''Redirect to edit user'''
+    return redirect(url_for('update_user', id=id))
+
+
+@app.route('/manage_users/user/<int:id>')
+def update_user(id):
+    '''Show and update user info '''
+    if session.get('isAdmin') or id == session.get('user_id'):
+        user = User.query.filter_by(_id=id).first()
+        if request.method == 'POST':
+            user.update(**request.form.to_dict())
+        # TODO user not logged in scenerio not coverd in user.html
+        return render_template('user.html', user=user, my_user=False)
+    else:
+        redirect(url_for('not_found_404'))
 
 @app.route('/manage_users')
 def manage_users():
@@ -152,14 +171,17 @@ def health_problem_old():
 
 @app.route('/add_user', methods=['GET', 'POST'])
 def add_user():
-    if( request.method == "POST" and session['isAdmin'] ):
-        data = request.form.to_dict()
-        if(User.query.filter_by(email=data['email']).first()):
-            logger.debug("Email already registered")  # TODO replace with flash messages
-        else:
-            data['password']=bcrypt.generate_password_hash(data['password'])
-            add_row(User, **data)
-    return render_template('admin_only/add_user.html')
+    if session['isAdmin']:
+        if request.method == "POST":
+            data = request.form.to_dict()
+            if(User.query.filter_by(email=data['email']).first()):
+                logger.debug("Email already registered")  # TODO replace with flash messages
+            else:
+                data['password']=bcrypt.generate_password_hash(data['password'])
+                add_row(User, **data)
+                logger.debug("User registered")  # TODO replace with flash messages
+        return render_template('admin_only/add_user.html')
+    return redirect(url_for('index'))
 
 ### ???
 @app.route('/manage_paid_actions')
@@ -233,17 +255,14 @@ def medical_problem():
     return render_template('not_menu_accessible/medical_report.html')
 
 
-@app.route('/medical_report_creator')
-def medical_report_creator():
-    if request.method == 'POST' and (session['isAdmin'] == True or session['isDoctor'] == True):
-        data = request.form.to_dict()
-        ### ???
-        data['author']=session['user_id']
-        data['health_problem']=session['health_problem_id'] # -> toto třeba ještě dodat do session, proc pres session?
-        medical_rep = MedicalReport(data)
-        db.session.add(medical_rep)
-        db.session.commit()
-    return render_template('not_menu_accessible/medical_report_creator.html')
+@app.route('/medical_report_creator/<string:health_problem_id>', methods=['GET', 'POST'])
+def medical_report_creator(health_problem_id):
+    if session.get('isAdmin') or session.get('isDoctor'):
+        if request.method == 'POST':
+            data = request.form.to_dict()
+            add_row(MedicalReport, author=session.get('user_id'), health_problem=health_problem_id, **data)
+        return render_template('not_menu_accessible/medical_report_creator.html')
+    return redirect(url_for('/'))
 
 
 @app.route('/medical_examinations')

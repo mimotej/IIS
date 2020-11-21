@@ -3,11 +3,16 @@ import pickle
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.utils import secure_filename
 
+
+UPLOAD_FOLDER = '/path/to/the/uploads'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 logger.basicConfig(level=logger.DEBUG)  # Set logger for whatever reason
 app = Flask(__name__)
 db = SQLAlchemy(app)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = 'a4b32a254b543f4d5e44ed255a4b22c1'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Iis2020?@127.0.0.1/IIS'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://flask:assword@127.0.0.1/IIS'
@@ -38,6 +43,7 @@ class User(db.Model):
         self.isInsurance = data.get('isInsurance') == "True"
         self.isAdmin = data.get('isAdmin') == "True"
         self.isDoctor = data.get('isDoctor') == "True"
+        self.url = self.get_url
     
     def login_dict(self):
         return {
@@ -48,12 +54,16 @@ class User(db.Model):
         }
     
     def update(self, **kwargs):
-        self.name = kwargs.get('name', self.name)
-        self.surname = kwargs.get('surname', self.surname)
-        self.email = kwargs.get('email', self.email)
-        self.phone = kwargs.get('phone', self.phone)
-        self.address = kwargs.get('address', self.address)
+        self.name = kwargs['name'] if kwargs.get('name') else self.name
+        self.surname = kwargs['surname'] if kwargs.get('surname') else self.surname
+        self.email = kwargs['email'] if kwargs.get('email') else self.email
+        self.phone = kwargs['phone'] if kwargs.get('phone') else self.phone
+        self.address = kwargs['address'] if kwargs.get('address') else self.address
+        logger.debug(kwargs)
         db.session.commit()
+
+    def get_url(self):
+        return 'Document.location = "/"'  # manage_users/user/" + str(self._id) + "';"
 
 
 class HealthProblem(db.Model):
@@ -102,7 +112,7 @@ class ExaminationRequest(db.Model):
 class MedicalReport(db.Model):
     __tablename__ = 'medical_report'
     _id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(1024))
+    content = db.Column(db.String(128))
     attachement = db.Column(db.String(1024))
     health_problem = db.Column(db.ForeignKey('health_problems._id'),
                                nullable=False)
