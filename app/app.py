@@ -79,20 +79,21 @@ def user():
 @app.route('/manage_users/<int:id>', methods=['GET', 'POST'])
 def redirect_user(id):
     '''Redirect to edit user'''
-    return redirect(url_for('update_user', id=id))
+    return redirect(url_for('update_user', id=id, code=307))
 
 
-@app.route('/manage_users/user/<int:id>')
+@app.route('/manage_users/user/<int:id>', methods=['GET', 'POST'])
 def update_user(id):
     '''Show and update user info '''
     if session.get('isAdmin') or id == session.get('user_id'):
+        logger.debug(id)
         user = User.query.filter_by(_id=id).first()
         if request.method == 'POST':
             user.update(**request.form.to_dict())
         # TODO user not logged in scenerio not coverd in user.html
         return render_template('user.html', user=user, my_user=False)
     else:
-        redirect(url_for('not_found_404'))
+        return redirect(url_for('not_found_404'))
 
 @app.route('/manage_users')
 def manage_users():

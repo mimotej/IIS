@@ -2,7 +2,11 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="no-edit-user-form-container">
+      {% if my_user %}
       <form action="{{ url_for('user') }}" method="post">
+      {% else %}
+      <form action="{{ url_for('update_user', id=user._id) }}" method="post">
+      {% endif %}
         <div class="no-edit-user-form">
             {% if user %}
             <div id="pencil" class="edit-text"><a href="#edit_form"><i class="fa fa-pencil-square-o fa-2x" style="padding-left: 15px;" aria-hidden="true"></i><br />Editovat</a></div>
