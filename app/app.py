@@ -4,6 +4,8 @@ from database import *
 from datetime import timedelta
 import logging as logger
 from database import db, app
+import os
+from flask import send_from_directory, abort
 
 logger.basicConfig(level='DEBUG')
 bcrypt = Bcrypt(app)
@@ -17,9 +19,7 @@ SESSION_USER_DATA = ['isAdmin', 'isDoctor', 'isInsurance', 'user_id']
 @app.route('/')
 def index():
     '''Show health problems according to user permissions'''
-    if session.get('isAdmin'):
-        problems = HealthProblem.query
-    elif session.get('isDoctor'):
+    if session.get('isDoctor'):
         problems = HealthProblem.query.filter_by(doctor_id=session['user_id'])
     elif session.get('user_id'):
         problems = HealthProblem.query.filter_by(
@@ -73,7 +73,8 @@ def user():
     user = User.query.filter_by(_id=session.get('user_id')).first()
     if request.method == 'POST':
         user.update(**request.form.to_dict())
-    # TODO user not logged in scenerio not coverd in user.html
+    if user == None:
+        abort(404)
     return render_template('user.html', user=user, my_user=True)
 
 @app.route('/manage_users/<int:id>', methods=['GET', 'POST'])
@@ -93,11 +94,13 @@ def update_user(id):
         # TODO user not logged in scenerio not coverd in user.html
         return render_template('user.html', user=user, my_user=False)
     else:
-        return redirect(url_for('not_found_404'))
+        abort(404)
 
 @app.route('/manage_users')
 def manage_users():
     '''Manage users (admin only)'''
+    if "isAdmin" not in session:
+        abort(404)
     return render_template(
             'admin_only/manage_users.html',
             users=permitted_query(User, session.get('isAdmin'))
@@ -106,6 +109,8 @@ def manage_users():
 
 @app.route('/paid_action_db')
 def paid_action():
+    if "isAdmin" not in session and "isInsurance" not in session:
+        abort(404)
     return render_template(
             'insurance_worker/paid_action_db.html',
             p_templates=permitted_query(PaymentTemplate,
@@ -115,6 +120,8 @@ def paid_action():
 
 @app.route('/paid_action_new', methods=['GET', 'POST'])
 def paid_action_new():
+    if "isAdmin" not in session and "isInsurance" not in session:
+        abort(404)
     if( request.method == "POST" ):
         if session['isAdmin'] or session['isInsurance']:
             add_row(PaymentTemplate, **request.form.to_dict())
@@ -123,16 +130,26 @@ def paid_action_new():
 
 @app.route('/process_request_payment_approved/<int:payment_id>')
 def process_request_approved_payment(payment_id):
-    print(payment_id)
-    return redirect(url_for('index'))
+    if "isAdmin" not in session and "isInsurance" not in session:
+        abort(404)
+    request_pay = PaymentRequest.query.filter_by(_id=payment_id).first()
+    request_pay.state = "Schváleno"
+    db.session.commit()
+    return redirect(url_for('manage_paid_actions'))
 
 @app.route('/process_request_payment_not_approved/<int:payment_id>')
 def process_request_not_approved_payment(payment_id):
-    print(payment_id)
-    return redirect(url_for('index'))
+    if "isAdmin" not in session and "isInsurance" not in session:
+        abort(404)
+    request_pay = PaymentRequest.query.filter_by(_id=payment_id).first()
+    request_pay.state = "Neschváleno"
+    db.session.commit()
+    return redirect(url_for('manage_paid_actions'))
 ### ???
 @app.route('/health', methods=['GET', 'POST'])
 def health_problem():
+    if "isAdmin" not in session and "isDoctor" not in session:
+        abort(404)
     if( request.method == "POST" ):
         if session['isAdmin'] or session['isDoctor']:
             data = request.form.to_dict()
@@ -163,6 +180,8 @@ def health_problem():
 ### ???
 @app.route('/health_old', methods=['GET', 'POST'])
 def health_problem_old():
+    if "isAdmin" not in session and "isDoctor" not in session:
+        abort(404)
     if( request.method == "POST" ):
         if session['isAdmin'] == True or session['isDoctor']==True:
             data = request.form.to_dict()
@@ -191,11 +210,13 @@ def add_user():
                 add_row(User, **data)
                 logger.debug("User registered")  # TODO replace with flash messages
         return render_template('admin_only/add_user.html')
-    return redirect(url_for('index'))
+    abort(404)
 
 ### ???
 @app.route('/manage_paid_actions')
 def manage_paid_actions():
+    if "isAdmin" not in session and "isInsurance" not in session:
+        abort(404)
     p_requests = PaymentRequest.query
     p_templates = PaymentTemplate.query
     p_doctor = {}
@@ -208,13 +229,15 @@ def manage_paid_actions():
 
 @app.route('/ticket',  methods=['GET', 'POST'])
 def tickets():
+    if "isAdmin" not in session and "isDoctor" not in session:
+        abort(404)
     if request.method == 'POST':
         if session.get('isAdmin') or session.get('isDoctor'):
             problem_id =  request.args.get('p_id')
             data = request.form.to_dict()
-            doctor = User.query.filter_by(_id=data.get('received_by')).first()
+            doctor = User.query.filter_by(email=data.get('received_by')).first()
             if doctor.isDoctor:
-                add_row(ExaminationRequest, created_by=session.get('user_id'), state="Not done", health_problem=problem_id, **data)
+                add_row(ExaminationRequest, created_by=session.get('user_id'), receiver=doctor._id, state="Nevyřízeno", health_problem=problem_id, **data)
             else:
                 logger.debug("Error: not doctor ID")
 
@@ -225,6 +248,7 @@ def tickets():
 def medical_report():
     problem_id =  request.args.get('p_id')
     problem = HealthProblem.query.filter_by(_id=problem_id).first()
+    reports = MedicalReport.query.filter_by(health_problem=problem_id)
     if problem:
         if(session['isAdmin'] or problem.patient_id == session.get('user_id')
             or problem.doctor_id == session.get('user_id')):
@@ -232,8 +256,9 @@ def medical_report():
             if doctor:
                 return render_template(
                     'not_menu_accessible/problem_report.html',
-                    problem=problem, doctor=doctor.name
+                    problem=problem, doctor=doctor.name, reports=reports
                 )
+        abort(404)
     ### TODO Maybe get to previous link?
     
 
@@ -245,11 +270,13 @@ def not_found_404():
 
 @app.route('/delegate_problem',  methods=['GET', 'POST'])
 def delegate():
+    if "isAdmin" not in session and "isDoctor" not in session:
+        abort(404)
     if (request.method == 'POST'):
         problem_id =  request.args.get('p_id')
         problem = HealthProblem.query.filter_by(_id=problem_id).first()
         if problem:
-            doctor = User.query.filter_by(_id=request.form['id_doctor']).first()
+            doctor = User.query.filter_by(email=request.form['id_doctor']).first()
             if doctor and (session['isAdmin'] or session['isDoctor']):
                 logger.debug(doctor._id)
                 problem.doctor_id = doctor._id
@@ -260,9 +287,16 @@ def delegate():
     return render_template('doctor_only/delegate_problem.html')
 
 
-@app.route('/medical_report',  methods=['GET', 'POST'])
-def medical_problem():
-    return render_template('not_menu_accessible/medical_report.html')
+@app.route('/medical_report/<int:id>',  methods=['GET', 'POST'])
+def medical_problem(id):
+    report = MedicalReport.query.filter_by(_id=id).first()
+    problem = HealthProblem.query.filter_by(_id=report.health_problem).first()
+    if session['user_id'] != problem.patient_id and session['user_id'] != problem.doctor_id:
+        abort(404)
+    author = User.query.filter_by(_id=report.author).first()
+    if(request.method=="POST"):
+        return send_from_directory(directory=app.config['UPLOAD_FOLDER'], filename=report.attachment_name, as_attachment=True)
+    return render_template('not_menu_accessible/medical_report.html', report=report, author=author)
 
 
 @app.route('/medical_report_creator/<string:health_problem_id>', methods=['GET', 'POST'])
@@ -270,23 +304,30 @@ def medical_report_creator(health_problem_id):
     if session.get('isAdmin') or session.get('isDoctor'):
         if request.method == 'POST':
             data = request.form.to_dict()
-            add_row(MedicalReport, author=session.get('user_id'), health_problem=health_problem_id, **data)
+            file = request.files['attachment']
+            filename=secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            add_row(MedicalReport, attachment=filename, author=session.get('user_id'), health_problem_id=health_problem_id, **data)
         return render_template('not_menu_accessible/medical_report_creator.html')
-    return redirect(url_for('/'))
+    abort(404)
 
 
 @app.route('/medical_examinations')
 def medical_examinations():
+    if "isAdmin" not in session and "isDoctor" not in session:
+        abort(404)
     health_problem_names={}
     for request in ExaminationRequest.query:
         health_problem_names[request.id]= ExaminationRequest.query.filter_by(id=request.health_problem_id).first().name
-        print(health_problem_names[request.id])
+
     return render_template('doctor_only/medical_examinations.html',
                            requests=ExaminationRequest.query, health_problem_names=health_problem_names)
 
 ### TODO Refactor adding table row
 @app.route('/payment_request',  methods=['GET', 'POST'])
 def payment_request():
+    if "isAdmin" not in session and "isInsurance" not in session:
+        abort(404)
     if request.method == 'POST':
         if session['isAdmin'] or session['isInsurance']:
             data = request.form.to_dict()
@@ -300,18 +341,26 @@ def payment_request():
     return render_template('doctor_only/payment_request.html')
 
 
-@app.route('/medical_examination')
+@app.route('/medical_examination', methods=['GET', 'POST'])
 def medical_examination():
+    if "isAdmin" not in session and "isDoctor" not in session:
+        abort(404)
     if (session['isAdmin'] or session['isDoctor']):
         request_id =  request.args.get('r_id')
         session['examination_request'] = request_id 
         e_request = ExaminationRequest.query.filter_by(id=request_id).first()
+        if request.method == 'POST':
+            e_request.state= "Vyřízeno"
+            db.session.commit()
+            return redirect(url_for('medical_examinations'))
         return render_template('doctor_only/medical_examination.html',
                                e_request=e_request)
     else :
         logger.debug("Error: not admin or doctor")  # TODO replace with flash messages
         return render_template('doctor_only/medical_examination.html',e_request=None)
-
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404_not_found.html'), 404
 if __name__ == '__main__':
     db.create_all()
     app.run(debug=True, host='0.0.0.0')

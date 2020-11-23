@@ -4,9 +4,9 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
-
-
-UPLOAD_FOLDER = '/path/to/the/uploads'
+import os
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.join(APP_ROOT, 'uploads', 'reports')
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 logger.basicConfig(level=logger.DEBUG)  # Set logger for whatever reason
@@ -14,7 +14,7 @@ app = Flask(__name__)
 db = SQLAlchemy(app)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = 'a4b32a254b543f4d5e44ed255a4b22c1'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Iis2020?@127.0.0.1/IIS'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@127.0.0.1/IIS'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://flask:assword@127.0.0.1/IIS'
 app.config['SECRET_KEY'] = '1f3118edada4643f34538ea423d32b21'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -102,33 +102,33 @@ class ExaminationRequest(db.Model):
         "health_problem_id", db.Integer, db.ForeignKey('health_problems._id'),
         nullable=False)
 
-    def __init__(self, **kwargs):
-        self.health_problem_id = kwargs.get('health_problem')
-        self.name = kwargs.get('name')
-        self.state = kwargs.get('state')
-        self.created_by = kwargs.get('id_doctor')
-        self.received_by = kwargs.get('id')
-        self.description = kwargs.get('description')
-        self.state = kwargs.get('state', "State empty")
-
+    def __init__(self, data):
+        self.health_problem_id = data.get('health_problem')
+        self.name = data.get('name')
+        self.state = data.get('state')
+        self.created_by = data.get('created_by')
+        self.description = data.get('description')
+        self.received_by = data.get('receiver')
 
 class MedicalReport(db.Model):
     __tablename__ = 'medical_report'
     _id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(128))
-    attachement = db.Column(db.String(1024))
+    Name = db.Column(db.String(1024))
+    content = db.Column(db.String(2048))
+    attachment_name = db.Column(db.String(1024))
     health_problem = db.Column(db.ForeignKey('health_problems._id'),
                                nullable=False)
     author = db.Column(db.ForeignKey('users._id'), nullable=False)
     examination_request = db.Column("health_problem_id", db.Integer,
                                     db.ForeignKey('health_problems._id'),
-                                    nullable=False)
+                                    nullable=True)
 
     def __init__(self, data):
-        self.health_problem = data.get('health_problem')
+        self.Name= data.get('Name')
+        self.health_problem = data.get('health_problem_id')
         self.author = data.get('author')
         self.content = data.get('content')
-        self.attachement = data.get('attachment')
+        self.attachment_name = data.get('attachment')
         self.examination_request = data.get('examination_request')
 
 

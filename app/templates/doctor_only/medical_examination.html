@@ -19,12 +19,14 @@
         <button class="button" style="width: 200px;" type="button" onclick="document.location = 'payment_request';">
                         Zažádat o proplacení
         </button>
-            <button class="button" style="width: 200px;" type="button" onclick="document.location = 'medical_report_creator';">
+            <button class="button" style="width: 200px;" type="button" onclick="document.location = '{{ url_for('medical_report_creator', health_problem_id=e_request.health_problem_id) }}';">
                 Přidat zprávu
-        </button>
-            <button class="button" style="width: 200px;" type="button" onclick="document.location = 'close_case';">
+            </button>
+            <form method="POST">
+            <button class="button" type="submit" name="submit_param" value="submit_value" style="width: 200px;" type="button">
                 Žádost vyřízena
-        </button>
+            </button>
+            </form>
         </div>
     </div>
 {% endblock %}

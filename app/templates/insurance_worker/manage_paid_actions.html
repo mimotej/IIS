@@ -30,14 +30,14 @@
             </tr>
             <tr>
                 {% for p_request,p_req in zip(templates,p_requests) %}
-                <th scope="row">{{p_request._id}}</th>
+                <th scope="row">{{p_req._id}}</th>
                 <td>{{p_request.name}}</td>
                 <td>{{p_request.price}}</td>
                 <td>{{p_request.type}}</td>
                 <td>{{p_doctor[p_req._id]}}</td>
                 <td>{{p_req.state}}</td>
-                <td style="padding-top: 0; padding-bottom: 0"><span style="font-size: 32px; cursor: pointer" onclick="document.location = '{{url_for('process_request_approved_payment',  payment_id=p_request._id)}}';" >&#10003;</span> <span
-                        style="font-size: 32px; padding-left: 15px; cursor: pointer" onclick="document.location = '{{url_for('process_request_not_approved_payment',  payment_id=p_request._id)}}';">&times;</span></td>
+                <td style="padding-top: 0; padding-bottom: 0"><span style="font-size: 32px; cursor: pointer" onclick="document.location = '{{url_for('process_request_approved_payment',  payment_id=p_req._id)}}';" >&#10003;</span> <span
+                        style="font-size: 32px; padding-left: 15px; cursor: pointer" onclick="document.location = '{{url_for('process_request_not_approved_payment',  payment_id=p_req._id)}}';">&times;</span></td>
             </tr>
             {%endfor%}
             <!-- možná ukázka generování kódu -->

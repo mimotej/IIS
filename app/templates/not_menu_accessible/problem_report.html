@@ -26,10 +26,12 @@
         </div>
         <div style="grid-area: attachment">
             <label><b>Lékařské zprávy :</b></label>
-            <div onclick="document.location = 'medical_report';" style="cursor: pointer">Placeholder</div>
+            {% for report in reports %}
+            <div class="hide-button" onclick="document.location = '{{url_for('medical_problem',  id=report._id)}}';" style="cursor: pointer">{{ report.Name }}</div>
+             {% endfor %}
         </div>
                 <div style="text-align: left; grid-area: bottom-button">
-            <button class="button" style="width: 200px;" type="submit" onclick="document.location = 'medical_report_creator';">Přidat zprávu</button>
+            <button class="button" style="width: 200px;" type="submit" onclick="document.location = '{{ url_for('medical_report_creator', health_problem_id=problem._id) }}';">Přidat zprávu</button>
         </div>
         <div style="text-align: right; grid-area: bottom-button">
             <button class="button" style="width: 200px;" type="submit" onclick="document.location = 'ticket?p_id=' + {{problem._id}} ;">Zažádat o

@@ -5,19 +5,23 @@
     <div class="report">
         <div style="grid-area: name">
             <label><b>Název :</b></label>
-            <div>Placeholder</div>
+            <div>{{ report.Name }}</div>
         </div>
         <div style="grid-area: doctor">
             <label><b>Ošetřující lékař :</b></label>
-            <div>Placeholder</div>
+            <div>{{ author.name }}</div>
         </div>
         <div style="grid-area: description">
             <label><b>Popis :</b></label>
-            <div>Placeholder</div>
+            <div>{{ report.content }}</div>
         </div>
         <div style="grid-area: attachment">
-            <label><b>Přílohy :</b></label>
-            <div>Placeholder</div>
+            <label><b>Příloha :</b></label>
+            <form method="POST">
+                  <button type="submit" name="submit_param" value="submit_value" class="hide-button">
+                    <div>{{ report.attachment_name }}</div>
+                  </button>
+            </form>
         </div>
     </div>
 {% endblock %}

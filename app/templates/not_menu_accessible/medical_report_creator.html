@@ -2,9 +2,11 @@
 {% set active_page="reports" %}
 {% extends "base.html" %}
 {% block content %}
-    <form method="post">
+    <form method="post" enctype=multipart/form-data>
     <div class="add-user-form">
-
+                <div><label for="Name"><b>Název</b></label>
+            <input type="text" placeholder="Zadejte Název" name="Name">
+        </div>
         <div><label for="content"><b>Obsah</b></label><br>
             <textarea type="text" placeholder="obsah" name="content"></textarea>
         </div>
