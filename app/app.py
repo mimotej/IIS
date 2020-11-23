@@ -249,6 +249,7 @@ def medical_report():
     problem_id =  request.args.get('p_id')
     problem = HealthProblem.query.filter_by(_id=problem_id).first()
     reports = MedicalReport.query.filter_by(health_problem=problem_id)
+    examinations= ExaminationRequest.query.filter_by(health_problem_id=problem_id)
     if problem:
         if(session['isAdmin'] or problem.patient_id == session.get('user_id')
             or problem.doctor_id == session.get('user_id')):
@@ -256,7 +257,7 @@ def medical_report():
             if doctor:
                 return render_template(
                     'not_menu_accessible/problem_report.html',
-                    problem=problem, doctor=doctor.name, reports=reports
+                    problem=problem, doctor=doctor.name, reports=reports, examinations=examinations
                 )
         abort(404)
     ### TODO Maybe get to previous link?

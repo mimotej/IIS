@@ -15,6 +15,7 @@
             <label><b>Popis :</b></label>
             <div>{{e_request.description}}</div>
         </div>
+        {#% if e_request.received_by == session[user_id]: %#}
         <div style="width: 900px;">
         <button class="button" style="width: 200px;" type="button" onclick="document.location = 'payment_request';">
                         Zažádat o proplacení
@@ -22,11 +23,14 @@
             <button class="button" style="width: 200px;" type="button" onclick="document.location = '{{ url_for('medical_report_creator', health_problem_id=e_request.health_problem_id) }}';">
                 Přidat zprávu
             </button>
-            <form method="POST">
+            <div style="display: inline;">
+            <form method="POST" style="display: inline; margin: 0;">
             <button class="button" type="submit" name="submit_param" value="submit_value" style="width: 200px;" type="button">
                 Žádost vyřízena
             </button>
             </form>
+            </div>
         </div>
+        {#% endif %#}
     </div>
 {% endblock %}
