@@ -8,6 +8,7 @@
             <tr>
                 <th scope="col" style="width: 140px">ID</th>
                 <th scope="col" style="width: 200px">Název</th>
+                <th scope="col" style="width: 200px">Jméno</th>
                 <th scope="col" style="width: 280px">Název zdravotního problému</th>
                 <th style="width: 100px"></th>
             </tr>
@@ -16,6 +17,7 @@
             <tr>
                 <th scope="row" class="input-row"><input type="text" style="border-radius: 0" placeholder="" name="ID"
                                                          class="input-row"></th>
+                <td><input style="border-radius: 0" type="text" placeholder="" name="doctor_name" class="input-row"></td>
                 <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
                 <td><input style="border-radius: 0" type="text" placeholder="" name="health_problem" class="input-row"></td>
                 <td>
@@ -26,6 +28,7 @@
                     {% if request.state == "Nevyřízeno" %}
                     <tr style="cursor: pointer">
                 <th class="custom-button" scope="row" onclick="document.location = 'medical_examination?r_id=' + {{request.id}} ;">{{request.id}}</th>
+                <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request.id}} ;" >{{request.name}}</td>
                 <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request.id}} ;" >{{request.name}}</td>
                 <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request.id}} ;">{{health_problem_names[request.id]}}</td>
                 <td  class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{request.id}} ;">
