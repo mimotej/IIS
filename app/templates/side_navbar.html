@@ -4,20 +4,28 @@
     <div class="hover-button {% if active_page=="reports" %}active {% endif %}side-navbar-cell"><a href="/">Zdravotní
         problémy</a></div>
     {% if "isDoctor" in session or "isAdmin" in session %}
+            {% if session["isDoctor"]==1 or session["isAdmin"]==1 %}
     <div class="hover-button {% if active_page=="examination_ticket" %}active {% endif %}side-navbar-cell"><a
             href="/medical_examinations">Žádosti o vyšetření</a></div>
+                {% endif %}
     {% endif %}
     {% if "isAdmin" in session %}
+        {%if session["isAdmin"]==1 %}
     <div class="hover-button {% if active_page=="manage_users" %}active {% endif %}side-navbar-cell"><a
             href="/manage_users">Správa uživatelů</a></div>
+            {% endif %}
     {% endif %}
     {% if "isAdmin" in session or "isInsurance" in session %}
+        {% if session["isDoctor"]==1 or session["isInsurance"]==1 %}
     <div class="hover-button {% if active_page=="paid_action" %}active {% endif %}side-navbar-cell"><a
             href="/paid_action_db">Databáze úkonů</a></div>
+            {% endif %}
     {% endif %}
     {% if "isAdmin" in session or "isInsurance" in session %}
+        {% if session["isDoctor"]==1 or session["isInsurance"]==1 %}
     <div class="hover-button {% if active_page=="manage_paid_action" %}active {% endif %}side-navbar-cell"><a
             href="/manage_paid_actions">Správa úkonů</a></div>
+            {% endif %}
     {% endif %}
     {% if "user_id" in session %}
     <div class="hover-button side-navbar-cell"><a

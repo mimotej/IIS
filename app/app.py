@@ -1,4 +1,4 @@
-from app.database import HealthProblem, add_row
+from database import HealthProblem, add_row
 from os import TMP_MAX
 from flask import Flask, render_template, request, redirect, url_for, session
 from database import *
