@@ -1,4 +1,3 @@
-from database import HealthProblem, add_row
 from os import TMP_MAX
 from flask import Flask, render_template, request, redirect, url_for, session
 from database import *
@@ -74,11 +73,16 @@ def user():
     user = User.query.filter_by(_id=session.get('user_id')).first()
     if request.method == 'POST':
         user.update(**request.form.to_dict())
+        if request.form['submit_button'] == 'delete_user':
+            user.delete()
+            return redirect(url_for('logout'))
+        elif request.form['submit_button'] == 'update_user':
+            user.update(**request.form.to_dict())
     if not user:
         abort(404)
     return render_template('user.html', user=user, my_user=True)
 
-@app.route('/manage_users/<int:id>', methods=['GET', 'POST'])
+@app.route('/manage_users/<int:id>', methods=['GET', 'POST'])   
 def redirect_user(id):
     '''Redirect to edit user'''
     # code 307 preserves http method
@@ -92,7 +96,13 @@ def update_user(id):
         logger.debug(id)
         user = User.query.filter_by(_id=id).first()
         if request.method == 'POST':
-            user.update(**request.form.to_dict())
+            if request.form['submit_button'] == 'delete_user':
+                user.delete()
+                if(session.get('user_id') == user._id):
+                    return redirect(url_for('logout'))
+                return redirect(url_for('manage_users'))
+            elif request.form['submit_button'] == 'update_user':
+                user.update(**request.form.to_dict())
         # TODO user not logged in scenerio not coverd in user.html
         return render_template('user.html', user=user, my_user=False)
     else:

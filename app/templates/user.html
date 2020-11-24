@@ -52,17 +52,17 @@
                                                                                                             class="edit-user-form-input"
                                                                                                             name="isinsurance" {% if user.isInsurance == True %}checked{% endif %} value="True"><span
                     id="edit-user-form" class="edit-user-form-input" style="display: block; font-size: 32px" ">{% if user.isInsurance == True %}&#10003;{% else %}&times;{% endif %}</span></div>
-                {% if session["isAdmin"] == 1 %}
-                    <button id="" class="button edit-user-form-input button-edit-user-form-input" type="submit">
+                {% if session["isAdmin"] %}
+                    <button id="" class="button edit-user-form-input button-edit-user-form-input" type="submit"  value="delete_user" name="submit_button">
                         Smazat
                     </button>
                     {% endif %}
-                <button id="edit-user-form" class="button edit-user-form-input button-edit-user-form-input" type="submit">
+                <button id="edit-user-form" class="button edit-user-form-input button-edit-user-form-input" type="submit" value="update_user" name="submit_button">
                 Změnit
             </button>
         </div>
         </form>
-                <!-- not sure what it does so I will leave it here but delete later!
+                <!-- not sure what it does so I will leave it here but delete later!, tohle bylo tmp logout tlacitko, muzes smazat
         {% if my_user %}
         <button onclick="document.location = 'logout';">
                 Odhlásit se

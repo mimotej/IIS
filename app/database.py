@@ -14,7 +14,7 @@ app = Flask(__name__)
 db = SQLAlchemy(app)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = 'a4b32a254b543f4d5e44ed255a4b22c1'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@127.0.0.1/IIS'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Iis2020?@127.0.0.1/IIS'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://flask:assword@127.0.0.1/IIS'
 app.config['SECRET_KEY'] = '1f3118edada4643f34538ea423d32b21'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -67,6 +67,11 @@ class User(db.Model):
 
     def get_url(self):
         return 'Document.location = "/"'  # manage_users/user/" + str(self._id) + "';"
+    
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+        logger.debug("User deleted, name: " + self.name)
 
 
 class HealthProblem(db.Model):
