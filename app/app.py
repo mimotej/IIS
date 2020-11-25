@@ -311,7 +311,7 @@ def medical_examinations():
     if session.get('isAdmin') or session.get('isDoctor'):
         health_problem_names={}
         for request in ExaminationRequest.query:
-            health_problem_names[request.id]= ExaminationRequest.query.filter_by(id=request.health_problem_id).first().name
+            health_problem_names[request.id]= HealthProblem.query.filter_by(_id=request.health_problem_id).first().name
 
         return render_template('doctor_only/medical_examinations.html',
                                requests=ExaminationRequest.query, health_problem_names=health_problem_names)
