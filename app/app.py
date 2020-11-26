@@ -313,8 +313,16 @@ def medical_examinations():
         for request in ExaminationRequest.query:
             health_problem_names[request.id]= HealthProblem.query.filter_by(_id=request.health_problem_id).first().name
 
+        doctor_received_by_names={}
+        for request in ExaminationRequest.query:
+            doctor_received_by_names[request.id]= User.query.filter_by(_id=request.received_by).first().surname
+
+        doctor_created_by_names={}
+        for request in ExaminationRequest.query:
+            doctor_created_by_names[request.id]= User.query.filter_by(_id=request.created_by).first().surname
+
         return render_template('doctor_only/medical_examinations.html',
-                               requests=ExaminationRequest.query, health_problem_names=health_problem_names)
+                               requests=ExaminationRequest.query, health_problem_names=health_problem_names,doctor_received_by_names=doctor_received_by_names,doctor_created_by_names=doctor_created_by_names)
     abort(404)
 
 ### TODO Refactor adding table row
@@ -336,12 +344,15 @@ def medical_examination():
         request_id =  request.args.get('r_id')
         session['examination_request'] = request_id 
         e_request = ExaminationRequest.query.filter_by(id=request_id).first()
+        doctor_received_by= User.query.filter_by(_id=e_request.received_by).first()
+        doctor_created_by= User.query.filter_by(_id=e_request.created_by).first()
+        health_problem_name = HealthProblem.query.filter_by(_id=e_request.health_problem_id).first().name
         if request.method == 'POST':
             e_request.state= "Vyřízeno"
             db.session.commit()
             return redirect(url_for('medical_examinations'))
         return render_template('doctor_only/medical_examination.html',
-                               e_request=e_request)
+                               e_request=e_request, health_problem_name =health_problem_name ,doctor_received_by=doctor_received_by,doctor_created_by=doctor_created_by)
     else :
         logger.debug("Error: not admin or doctor")  # TODO replace with flash messages
         return render_template('doctor_only/medical_examination.html',e_request=None)

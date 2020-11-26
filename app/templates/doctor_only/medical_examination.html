@@ -4,12 +4,20 @@
 {% block content %}
     <div class="report">
         <div >
-            <label><b>Název :</b></label>
+            <label><b>Název žádosti:</b></label>
             <div>{{e_request.name}}</div>
         </div>
         <div >
-            <label><b>ID zdravotního problému:</b></label>
-            <div>{{e_request.health_problem_id}}</div>
+            <label><b>Jméno ošetřujícího lékaře:</b></label>
+            <div>{{doctor_received_by.name}} {{doctor_received_by.surname}}</div>
+        </div>
+        <div >
+            <label><b>Zdravotní problém:</b></label>
+            <div>{{health_problem_name }}</div>
+        </div>
+        <div >
+            <label><b>Jméno zadavatele:</b></label>
+            <div>{{doctor_created_by.name}} {{doctor_created_by.surname}}</div>
         </div>
         <div >
             <label><b>Popis :</b></label>
