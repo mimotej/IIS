@@ -14,11 +14,27 @@
 </head>
 
 <body>
+    
+
 <nav class="navbar-dark bg-dark navbar-fixed-top" id="top_bar">
+
     <div id="home-but"><a href="/"><i class="fa fa-hospital-o fa-3x" aria-hidden="true"></i></a></div>
     <div id="search_bar">
     </div>
+    {% for message in get_flashed_messages() %}
+       <div id="flash-message" class="alert alert-dark alert-dismissible fade show " role="alert" style=" max-width: 50%; position: absolute;margin-left: auto;margin-right: auto;left: 0;right: 0;text-align: center;z-index: 1;">
+                <span>{{ message }}</span>
+                <!--button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span onclick="document.getElementById('flash-message').style.display='none';document.getElementById('flash-message').style.display='block'; 
+              class="close" aria-hidden="true">&times;</span>
+                </button-->
+
+            </div>
+    {% endfor %}
+
     
+    
+
     {% if "user_id" in session %}
        {% include "user_logged.html" %}
     {% else %} 
@@ -27,7 +43,9 @@
 </nav>
 
 {% include "side_navbar.html" %}
-<div id="content">{% block content %}{% endblock %}</div>
+<div id="content">
+
+{% block content %}{% endblock %}</div>
 {% include "register_form.html" %}
 </body>
 <script type=text/javascript src="{{ url_for('static', filename='js/style-js.js') }}"></script>

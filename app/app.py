@@ -1,11 +1,13 @@
 from os import TMP_MAX
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session,flash
 from database import *
 from datetime import timedelta
 import logging as logger
 from database import db, app
 import os
 from flask import send_from_directory, abort
+from random import randint 
+
 
 logger.basicConfig(level='DEBUG')
 bcrypt = Bcrypt(app)
@@ -35,7 +37,7 @@ def logout():
     '''Log out user'''
     for item in SESSION_USER_DATA:
         session.pop(item)
-    logger.debug("User logged out")  # TODO replace with flash messages
+    flash("Účet odhlášen")
     return redirect(url_for('index'))
 
 
@@ -47,11 +49,14 @@ def login():
         if user:
             if bcrypt.check_password_hash(user.password, request.form['password']):
                 session.update(user.login_dict())
-                logger.debug("User logged in")  # TODO replace with flash messages
+                logger.debug("User logged in") 
             else:
-                logger.debug("Bad password")  # TODO replace with flash messages
+                logger.debug("Bad password")  
+                flash("Špatné heslo")
         else:
-            logger.debug("User not found")  # TODO replace with flash messages
+            logger.debug("User not found") 
+            flash("Zadaný účet neexistuje")
+            '''return render_template("index.html")'''
     return redirect(url_for('index'))
 
 
@@ -60,11 +65,11 @@ def sign_up():
     '''Process data for sign up'''
     data = request.form.to_dict()
     if User.query.filter_by(email=data['email']).first():
-        logger.debug("Email already registered")  # TODO replace with flash messages
+        flash("Zadaný účet je již existující, zkuste zadat jiný e-mail")
     else:
         data['password'] = bcrypt.generate_password_hash(data['password'])
         add_row(User, **data)
-        logger.debug("New user registered")  # TODO replace with flash messages
+        flash("Účet úspěšně registrován")
     return redirect(url_for('index'))
 
 @app.route('/user', methods=['GET', 'POST'])
@@ -135,7 +140,7 @@ def paid_action_new():
     if session.get('isAdmin') or session.get('isInsurance'):
         if request.method == "POST":
             add_row(PaymentTemplate, **request.form.to_dict())
-            logger.debug("New paid action created")    # TODO replace with flash messages
+            flash("Událost vytvořena")
         return render_template('insurance_worker/manage_new_action.html')
     abort(404)
 
@@ -203,11 +208,11 @@ def add_user():
         if request.method == "POST":
             data = request.form.to_dict()
             if(User.query.filter_by(email=data['email']).first()):
-                logger.debug("Email already registered")  # TODO replace with flash messages
+                flash("Zadaný účet je již existující, zkuste zadat jiný e-mail")
             else:
                 data['password']=bcrypt.generate_password_hash(data['password'])
                 add_row(User, **data)
-                logger.debug("User registered")  # TODO replace with flash messages
+                flash("Účet vytvořen")
         return render_template('admin_only/add_user.html')
     abort(404)
 
@@ -354,12 +359,19 @@ def medical_examination():
         return render_template('doctor_only/medical_examination.html',
                                e_request=e_request, health_problem_name =health_problem_name ,doctor_received_by=doctor_received_by,doctor_created_by=doctor_created_by)
     else :
-        logger.debug("Error: not admin or doctor")  # TODO replace with flash messages
+        flash("Nedostačující oprávnění")
         return render_template('doctor_only/medical_examination.html',e_request=None)
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404_not_found.html'), 404
+
+
+def random_integer():
+    min_ = 100000
+    max_ = 999999
+    rand = randint(min_, max_)
+    return rand
 
 if __name__ == '__main__':
     db.create_all()
