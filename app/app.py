@@ -102,7 +102,12 @@ def update_user(id):
         user = User.query.filter_by(_id=id).first()
         if request.method == 'POST':
             if request.form['submit_button'] == 'delete_user':
-                user.delete()
+                import pdb; pdb.set_trace()
+                if user.isDoctor or user.isAdmin:
+                    sub_doc = 7  #  Popup dialog window
+                    user.delete(sub_doc_id=sub_doc)
+                else:
+                    user.delete()
                 if(session.get('user_id') == user._id):
                     return redirect(url_for('logout'))
                 return redirect(url_for('manage_users'))
@@ -177,8 +182,7 @@ def health_problem():
             user = User.query.filter_by(email=request.form['email']).first()
             if user:
                 add_row(HealthProblem, **data, patient_id=user._id,
-                        doctor_id=session['user_id'],
-                        name=request.form['name_problem'])
+                        doctor_id=session['user_id'])
             else:
                 logger.debug("User not found")
             return redirect(url_for('health_problem'))
@@ -298,7 +302,7 @@ def medical_problem(id):
     return render_template('not_menu_accessible/medical_report.html', report=report, author=author)
 
 
-@app.route('/medical_report_creator/<string:health_problem_id>', methods=['GET', 'POST'])
+@app.route('/medical_report_creator/<int:health_problem_id>', methods=['GET', 'POST'])
 def medical_report_creator(health_problem_id):
     if session.get('isAdmin') or session.get('isDoctor'):
         if request.method == 'POST':
@@ -306,6 +310,7 @@ def medical_report_creator(health_problem_id):
             file = request.files['attachment']
             filename=secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            import pdb; pdb.set_trace()
             add_row(MedicalReport, attachment=filename, author=session.get('user_id'), health_problem_id=health_problem_id, **data)
         return render_template('not_menu_accessible/medical_report_creator.html')
     abort(404)
@@ -316,15 +321,15 @@ def medical_examinations():
     if session.get('isAdmin') or session.get('isDoctor'):
         health_problem_names={}
         for request in ExaminationRequest.query:
-            health_problem_names[request.id]= HealthProblem.query.filter_by(_id=request.health_problem_id).first().name
+            health_problem_names[request._id]= HealthProblem.query.filter_by(_id=request.health_problem_id).first().name
 
         doctor_received_by_names={}
         for request in ExaminationRequest.query:
-            doctor_received_by_names[request.id]= User.query.filter_by(_id=request.received_by).first().surname
+            doctor_received_by_names[request._id]= User.query.filter_by(_id=request.received_by).first().surname
 
         doctor_created_by_names={}
         for request in ExaminationRequest.query:
-            doctor_created_by_names[request.id]= User.query.filter_by(_id=request.created_by).first().surname
+            doctor_created_by_names[request._id]= User.query.filter_by(_id=request.created_by).first().surname
 
         return render_template('doctor_only/medical_examinations.html',
                                requests=ExaminationRequest.query, health_problem_names=health_problem_names,doctor_received_by_names=doctor_received_by_names,doctor_created_by_names=doctor_created_by_names)

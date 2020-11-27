@@ -12,10 +12,12 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 logger.basicConfig(level=logger.DEBUG)  # Set logger for whatever reason
 app = Flask(__name__)
 db = SQLAlchemy(app)
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = 'a4b32a254b543f4d5e44ed255a4b22c1'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Iis2020?@127.0.0.1/IIS'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://flask:Password<3@127.0.0.1/IIS'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Iis2020?@127.0.0.1/IIS'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://flask:Password<3@127.0.0.1/IIS'
 app.config['SECRET_KEY'] = '1f3118edada4643f34538ea423d32b21'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -65,10 +67,44 @@ class User(db.Model):
         logger.debug(kwargs)
         db.session.commit()
 
+     
     def get_url(self):
-        return 'Document.location = "/"'  # manage_users/user/" + str(self._id) + "';"
-    
-    def delete(self):
+        return 'Document.location = "/"'
+
+    def delete(self, sub_doc_id=False):
+        if self.isDoctor or self.isAdmin:
+            if not sub_doc_id:
+                logger.debug("You have to provide substitute doctor id whe you delete a doctor")  # TODO flash message?
+                return False
+            elif not User.query.filter_by(_id=sub_doc_id).first():
+                logger.debug("Provided substitute doctor id invalid")  # TODO flash message?
+                return False
+            else:
+                query = HealthProblem.query.filter_by(doctor_id=self._id).all()
+                for q in query:
+                    q.doctor_id = sub_doc_id
+                query = ExaminationRequest.query.filter_by(created_by=self._id).all()
+                for q in query:
+                    q.created_by = sub_doc_id
+                    q.description = "Doctor deleted, assign"
+                query = ExaminationRequest.query.filter_by(received_by=self._id).all()
+                for q in query:
+                    q.received_by = sub_doc_id
+                    q.description = "Doctor deleted, assign"
+                query = MedicalReport.query.filter_by(author=self._id).all()
+                for q in query:
+                    q.author = sub_doc_id                
+        if self.isInsurance or self.isAdmin:
+            query = PaymentRequest.query.filter_by(creator=self._id).all()
+            for q in query:
+                q.creator = None
+            query = PaymentRequest.query.filter_by(validator=self._id).all()
+            for q in query:
+                q.validator = None
+        query = HealthProblem.query.filter_by(patient_id=self._id).all()
+        for q in query:
+            q.delete()
+        db.session.commit()
         db.session.delete(self)
         db.session.commit()
         logger.debug("User deleted, name: " + self.name)
@@ -92,10 +128,13 @@ class HealthProblem(db.Model):
         self.patient_id = data.get('patient_id')
         self.doctor_id = data.get('doctor_id')
 
+    def delete(self):
+        delete_query(MedicalReport.query.filter_by(health_problem=self._id))
+        delete_query(ExaminationRequest.query.filter_by(health_problem_id=self._id))
 
 class ExaminationRequest(db.Model):
     __tablename__ = 'examination_request'
-    id = db.Column(db.Integer, primary_key=True)
+    _id = db.Column(db.Integer, primary_key=True)
     name = db.Column("name", db.String(64), nullable=False)
     description = db.Column("description", db.String(1024))
     state = db.Column("state", db.String(16), nullable=False)
@@ -103,9 +142,8 @@ class ExaminationRequest(db.Model):
                            db.ForeignKey('users._id'), nullable=False)
     received_by = db.Column("received_by", db.Integer,
                             db.ForeignKey('users._id'), nullable=False)
-    health_problem_id = db.Column(
-        "health_problem_id", db.Integer, db.ForeignKey('health_problems._id'),
-        nullable=False)
+    health_problem_id = db.Column(db.ForeignKey('health_problems._id'),
+        nullable=True)
 
     def __init__(self, data):
         self.health_problem_id = data.get('health_problem')
@@ -121,20 +159,19 @@ class MedicalReport(db.Model):
     Name = db.Column(db.String(1024))
     content = db.Column(db.String(2048))
     attachment_name = db.Column(db.String(1024))
-    health_problem = db.Column(db.ForeignKey('health_problems._id'),
+    health_problem = db.Column(db.Integer, db.ForeignKey('health_problems._id'),
                                nullable=False)
     author = db.Column(db.ForeignKey('users._id'), nullable=False)
-    examination_request = db.Column("health_problem_id", db.Integer,
-                                    db.ForeignKey('health_problems._id'),
-                                    nullable=True)
-
+    #examination_request = db.Column("health_problem_id", db.Integer,
+    #                                db.ForeignKey('examination_request._id'),
+    #                                nullable=True)
     def __init__(self, data):
         self.Name= data.get('Name')
         self.health_problem = data.get('health_problem_id')
         self.author = data.get('author')
         self.content = data.get('content')
         self.attachment_name = data.get('attachment')
-        self.examination_request = data.get('examination_request')
+        #self.examination_request = data.get('examination_request')
 
 
 # Je toto potřeba záznam z vyšetření by měla být zpráva a podání žádosti
@@ -160,13 +197,11 @@ class PaymentRequest(db.Model):
     #   db.ForeignKey('payment_template._id'), nullable=True)
     template = db.Column("payment_template", db.Integer,
                          db.ForeignKey('payment_template._id'), nullable=False)
-    creator = db.Column("creator", db.Integer, db.ForeignKey('users._id'),
-                        nullable=False)
-    validator = db.Column("validator", db.Integer, db.ForeignKey('users._id'),
-                          nullable=False)
+    creator = db.Column("creator", db.Integer, db.ForeignKey('users._id'))
+    validator = db.Column("validator", db.Integer, db.ForeignKey('users._id'))
     examination_request = db.Column(
         "examination_request", db.Integer,
-        db.ForeignKey('examination_request.id'), nullable=False
+        db.ForeignKey('examination_request._id'), nullable=False
     )
     state = db.Column(db.String(256), nullable=True)
 
@@ -210,6 +245,10 @@ def add_row(Table, **kwargs):
     db.session.add(row_instance)
     db.session.commit()
 
+def delete_query(query):
+    for q in query:
+        db.session.delete(q)
+    db.session.commit()
 
 db.create_all()
 db.session.commit()
