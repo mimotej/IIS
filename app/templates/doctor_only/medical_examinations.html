@@ -27,7 +27,7 @@
                 </td>
             </tr>
                 {% for request in requests%}
-                    {% if request.state == "Nevyřízeno" %}
+                    {% if request.state == "Nevyřízeno"  and request.received_by == session['user_id']%}
                     <tr style="cursor: pointer">
                 <th class="custom-button" scope="row" onclick="document.location = 'medical_examination?r_id=' + {{request.id}} ;">{{request.id}}</th>
                 <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request.id}} ;" >{{doctor_created_by_names[request.id]}}</td>

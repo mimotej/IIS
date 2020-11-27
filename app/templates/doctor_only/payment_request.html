@@ -2,13 +2,18 @@
 {% set active_page="reports" %}
 {% extends "base.html" %}
 {% block content %}
-    <form method="post">
+    <form method="post" style="width: 400px">
     <div class="add-user-form">
-        <div>
-            <label for="template"><b>ID</b></label>
-            <input type="text" placeholder="Zadejte ID typu zákroku" name="template" required>
-            <div>
-                <button class="button" type="submit">Požádat</button>
+        <div style="display: grid; justify-items: center;">
+            <label for="template"><b>Název zákroku : (Povinné) </b></label>
+            <select id="template" class="custom-select" name="template" style="margin-top: 10px;">
+                <option value="" disabled selected>Vyberte název zákroku</option>
+                {% for item in templates %}
+                <option value="{{item.name}}">{{item.name}}</option>
+                {% endfor %}
+            </select>
+            <div style="display: grid; justify-items: center; margin-top: 25px">
+                <button style="width: 100px" class="button" type="submit">Požádat</button>
             </div>
         </div>
     </div>

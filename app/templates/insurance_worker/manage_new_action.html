@@ -5,19 +5,19 @@
     <form action="{{ url_for('paid_action_new') }}" method="post">
     <div class="add-user-form">
         <div>
-            <label for="name"><b>Název</b></label>
+            <label for="name"><b>Název:</b></label>
             <input type="text" placeholder="Zadejte název" name="name" required>
         </div>
         <div>
-            <label for="surname"><b>Cena</b></label>
+            <label for="surname"><b>Cena:</b></label>
             <input type="text" placeholder="Zadejte cenu" name="price" required>
         </div>
         <div>
-            <label for="type"><b>Typ</b></label>
+            <label for="type"><b>Typ:</b></label>
             <input type="text" placeholder="Zadejte typ" name="type">
         </div>
-        <div>
-            <button class="button" type="submit">Přidat</button>
+        <div style="display: grid; justify-items: center; margin-top: 25px">
+            <button style="width: 100px" class="button" type="submit">Přidat</button>
         </div>
     </div>
     </form>

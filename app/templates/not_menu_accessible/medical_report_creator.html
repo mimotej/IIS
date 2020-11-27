@@ -4,17 +4,17 @@
 {% block content %}
     <form method="post" enctype=multipart/form-data>
     <div class="add-user-form">
-                <div><label for="Name"><b>Název</b></label>
-            <input type="text" placeholder="Zadejte Název" name="Name">
+        <div style="margin-top: 10px"><label for="Name"><b>Název:</b></label><br />
+            <input style="width: 75%" type="text" placeholder="Zadejte Název" name="Name">
         </div>
-        <div><label for="content"><b>Obsah</b></label><br>
-            <textarea type="text" placeholder="obsah" name="content"></textarea>
+        <div style="margin-top: 10px"><label for="content"><b>Obsah:</b></label><br>
+            <textarea type="text" style="width: 450px; border-radius: 10px; height: 200px" placeholder="Obsah zprávy" name="content"></textarea>
         </div>
-        <div><label for="attachment"><b>Lékařská zpráva</b></label>
+        <div style="margin-top: 10px"><label for="attachment"><b>Lékařská zpráva:</b></label><br/>
             <input type="file" placeholder="Zadejte lékařskou zprávu" name="attachment">
         </div>
-        <div>
-            <button class="button" type="submit">Vytvořit</button>
+        <div style="display: grid; justify-items: center; margin-top: 25px">
+            <button class="button" type="submit" style="width: 250px">Vytvořit</button>
         </div>
     </div>
     </form>

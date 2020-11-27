@@ -3,43 +3,47 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="problem">
-        <div style="text-align: right; grid-area: top-button">
-            <button class="button" style="width: 100px;" type="submit"
-                    onclick="document.location = 'delegate_problem?p_id=' + {{problem._id}} ;">Předat
-            </button>
+        <div style="grid-area: top-button; display: table">
+                <b style=" display: table-cell;font-size: 20px;text-align: left; vertical-align: middle; margin-bottom: 40px;">Karta zdravotního problému: {% if problem.name is defined %}{{problem.name}} {% else %}Název nezadán{% endif %}</b>
+                <button style="width: 100px;display: table-cell; float: right" class="button" style="width: 100px;" type="submit" onclick="document.location = 'delegate_problem?p_id=' + {{problem._id}} ;">Předat</button>
+
         </div>
-        <div style="grid-area: name">
+        <div style="grid-area: name; font-size: 18px;">
             <label><b>Název :</b></label>
-            <div>{{problem.name}}</div>
+            {% if problem.name is defined %}{{problem.name}}{% else %}Název nezadán{% endif %}
         </div>
-        <div style="grid-area: state">
+        <div style="grid-area: state;font-size: 18px;">
             <label><b>Stav :</b></label>
-            <div>{{problem.state}}</div>
+            {{problem.state}}
         </div>
-        <div style="grid-area: doctor">
+        <div style="grid-area: doctor; font-size: 18px;">
             <label><b>Ošetřující lékař :</b></label>
-            <div>{{doctor}}</div>
+            {% if doctor is defined %}{{doctor}}{% else %} Lékař nenalezen {% endif %}
         </div>
-        <div style="grid-area: description">
-            <label><b>Popis :</b></label>
-            <div>{{problem.description}}</div>
+        <div style="grid-area: description; font-size: 18px;">
+            <label><b>Popis :</b></label><br />
+            {% if problem.description is defined %}{{problem.description}}{% else %}Popis nezadán{% endif %}
         </div>
-        <div style="grid-area: attachment">
+        <div style="grid-area: attachment; font-size: 18px;">
             <label><b>Lékařské zprávy :</b></label>
+            <ul>
             {% for report in reports %}
-            <div class="hide-button" onclick="document.location = '{{url_for('medical_problem',  id=report._id)}}';" style="cursor: pointer">{{ report.Name }}</div>
+                <li><div class="hide-button" onclick="document.location = '{{url_for('medical_problem',  id=report._id)}}';" style="cursor: pointer">{{ report.Name }} - <b>Detail</b></div></li>
              {% endfor %}
+            </ul>
         </div>
                 <div style="text-align: left; grid-area: bottom-button">
             <button class="button" style="width: 200px;" type="submit" onclick="document.location = '{{ url_for('medical_report_creator', health_problem_id=problem._id) }}';">Přidat zprávu</button>
         </div>
         {% if "isDoctor" in session %}
             {% if session["isDoctor"] == 1 %}
-        <div style="grid-area: tickets">
+        <div style="grid-area: tickets; font-size: 18px;">
             <label><b>Žádosti o vyšetření:</b></label>
+            <ul>
             {% for examination in examinations %}
-            <div class="hide-button" onclick="document.location = 'medical_examination?r_id=' + {{examination.id}} ;" style="cursor: pointer">{{ examination.name }}</div>
+                <li><div class="hide-button" onclick="document.location = 'medical_examination?r_id=' + {{examination.id}} ;" style="cursor: pointer">{{ examination.name }} - <b>Detail</b></div></li>
              {% endfor %}
+            </ul>
         </div>
                 {% endif %}
         {% endif %}

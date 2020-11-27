@@ -3,23 +3,27 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="report">
+        <b style="grid-area: title;font-size: 20px;text-align: left; vertical-align: middle; margin-bottom: 20px;">Karta zdravotního problému: {% if report.Name is defined %}{{report.Name}} {% else %}Název nezadán{% endif %}</b>
+
         <div style="grid-area: name">
             <label><b>Název :</b></label>
-            <div>{{ report.Name }}</div>
+           {{ report.Name }}
         </div>
-        <div style="grid-area: doctor">
+        <div style="grid-area: doctor; font-size: 18px;">
             <label><b>Ošetřující lékař :</b></label>
-            <div>{{ author.name }}</div>
+            {{ author.name }}
         </div>
-        <div style="grid-area: description">
-            <label><b>Popis :</b></label>
-            <div>{{ report.content }}</div>
+        <div style="grid-area: description; font-size: 18px;">
+            <label><b>Popis :</b></label><br />
+            <span style="padding-left: 15px;"> {{ report.content }}</span>
         </div>
-        <div style="grid-area: attachment">
+        <div style="grid-area: attachment; font-size: 18px;">
             <label><b>Příloha :</b></label>
             <form method="POST">
                   <button type="submit" name="submit_param" value="submit_value" class="hide-button">
-                    <div>{{ report.attachment_name }}</div>
+                    <ul>
+                        <li>{{ report.attachment_name }} - <b>Stáhnout</b></li>
+                    </ul>
                   </button>
             </form>
         </div>

@@ -5,19 +5,19 @@
     <form method="post">
     <div class="new-ticket">
         <div>
-            <label><b>Název</b></label>
-            <input type="text" placeholder="Zadejte název" name="name">
+            <label><b>Název :</b></label>
+            <input type="text" placeholder="Zadejte název" {% if name is defined %}value="{{ name }}" {% endif %}name="name">
         </div>
         <div>
-            <label><b>ID doktora</b></label>
-            <input type="text" placeholder="Zadejte id doktora" name="received_by">
+            <label><b>Email doktora:</b></label>
+            <input type="text" placeholder="Zadejte email doktora" {% if received_by is defined %}value="{{ received_by }}" {% endif %}name="received_by" required>
         </div>
         <div>
-            <label><b>Popis</b></label>
-            <input type="text" placeholder="Zadejte popis" name="description" required>
+            <label><b>Informace k žádosti :</b></label><br />
+            <textarea style="width: 400px; height: 150px; border-radius:10px;" type="text" placeholder="Zadejte informace k žádosti" name="description">{% if description is defined %}{{ description }} {% endif %}</textarea>
         </div>
-        <div>
-            <button class="button input-row" type="submit">Zadat</button>
+        <div style="display: grid; justify-items: center; margin-top: 10px">
+            <button class="button input-row" style="border-radius: 10px; padding: 10px" type="submit"><b>Zadat</b></button>
         </div>
     </div>
     </form>

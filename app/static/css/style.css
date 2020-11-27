@@ -356,7 +356,7 @@ span#edit-user-form {
 }
 
 .table-report {
-    width: 80%;
+    width: 60%;
 }
 
 .input-row {
@@ -398,7 +398,7 @@ span#edit-user-form {
                         "attachment"
                         "tickets"
                         "bottom-button";
-    grid-template-rows: 1fr 1fr auto 1fr;
+
 }
 
 .report {
@@ -410,11 +410,11 @@ span#edit-user-form {
     -moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
     box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.75);
     display: grid;
-    grid-template-areas:"name"
+    grid-template-areas:"title"
+                        "name"
                         "doctor"
                         "description"
                         "attachment";
-    grid-template-rows: 1fr 1fr auto 1fr;
 }
 
 .new-ticket {

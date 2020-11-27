@@ -49,13 +49,20 @@ def login():
         if user:
             if bcrypt.check_password_hash(user.password, request.form['password']):
                 session.update(user.login_dict())
-                logger.debug("User logged in") 
+                logger.debug("User logged in")
+                if 'bad_password' in session:
+                    session.pop('bad_password')
+                    session.pop('email_bad')
             else:
                 logger.debug("Bad password")  
                 flash("Špatné heslo")
+                session['bad_password']=True
+                session['email_bad']=request.form['email']
         else:
             logger.debug("User not found") 
             flash("Zadaný účet neexistuje")
+            session['bad_password'] = True
+            session['email_bad'] = request.form['email']
             '''return render_template("index.html")'''
     return redirect(url_for('index'))
 
@@ -102,10 +109,9 @@ def update_user(id):
         user = User.query.filter_by(_id=id).first()
         if request.method == 'POST':
             if request.form['submit_button'] == 'delete_user':
-                import pdb; pdb.set_trace()
                 if user.isDoctor or user.isAdmin:
-                    sub_doc = 7  #  Popup dialog window
-                    user.delete(sub_doc_id=sub_doc)
+                    user_replacement_id = User.query.filter_by(email=request.form['replacement_name']).first()._id
+                    user.delete(sub_doc_id=user_replacement_id)
                 else:
                     user.delete()
                 if(session.get('user_id') == user._id):
@@ -174,7 +180,8 @@ def health_problem():
         if request.method == "POST":
             data = request.form.to_dict()
             if(User.query.filter_by(email=data['email']).first()):
-                logger.debug("User exists")
+                flash("Uživatel již je registrován")
+                return render_template('doctor_only/add_health_problem_new_user.html', data=data)
             else:
                 data['password'] = bcrypt.generate_password_hash(data['password'])
                 add_row(User, **data)
@@ -200,7 +207,8 @@ def health_problem_old():
                 add_row(HealthProblem, **data, patient_id=user._id,
                         doctor_id=session.get('user_id'))
             else:
-                logger.debug("User not found")
+                flash("Uživatel nenalezen")
+                return render_template('doctor_only/add_health_problem_new_user.html', data=data)
             return redirect(url_for('health_problem'))
         return render_template('doctor_only/add_health_problem_registered_user.html')
     abort(404)
@@ -213,6 +221,7 @@ def add_user():
             data = request.form.to_dict()
             if(User.query.filter_by(email=data['email']).first()):
                 flash("Zadaný účet je již existující, zkuste zadat jiný e-mail")
+                return render_template('admin_only/add_user.html', data=data)
             else:
                 data['password']=bcrypt.generate_password_hash(data['password'])
                 add_row(User, **data)
@@ -242,10 +251,15 @@ def tickets():
             problem_id =  request.args.get('p_id')
             data = request.form.to_dict()
             doctor = User.query.filter_by(email=data.get('received_by')).first()
+            if doctor == None:
+                flash("Doktor nenalezen")
+                return render_template('medical_examination_ticket.html', name=data['name'], received_by=data['received_by'], description=data['description'])
             if doctor.isDoctor:
                 add_row(ExaminationRequest, created_by=session.get('user_id'), receiver=doctor._id, state="Nevyřízeno", health_problem=problem_id, **data)
             else:
-                logger.debug("Error: not doctor ID")
+                flash("Uživatel není doktor")
+                return render_template('medical_examination_ticket.html', name=data['name'],
+                                       received_by=data['received_by'], description=data['description'])
 
         return render_template('medical_examination_ticket.html')
     abort(404)
@@ -258,7 +272,7 @@ def medical_report():
     reports = MedicalReport.query.filter_by(health_problem=problem_id)
     examinations= ExaminationRequest.query.filter_by(health_problem_id=problem_id)
     if problem:
-        if(session['isAdmin'] or problem.patient_id == session.get('user_id')
+        if(session.get('isAdmin') or problem.patient_id == session.get('user_id')
             or problem.doctor_id == session.get('user_id')):
             doctor = User.query.filter_by(_id=problem.doctor_id).first()
             if doctor:
@@ -287,6 +301,10 @@ def delegate():
                     logger.debug(doctor._id)
                     problem.doctor_id = doctor._id
                     db.session.commit()
+                else:
+                    flash("Uživatel nenalezen nebo nemá dostatečná opravnění")
+                    return render_template('doctor_only/delegate_problem.html', id_doctor=request.form['id_doctor'])
+
     return render_template('doctor_only/delegate_problem.html')
 
 
@@ -310,26 +328,25 @@ def medical_report_creator(health_problem_id):
             file = request.files['attachment']
             filename=secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            import pdb; pdb.set_trace()
             add_row(MedicalReport, attachment=filename, author=session.get('user_id'), health_problem_id=health_problem_id, **data)
         return render_template('not_menu_accessible/medical_report_creator.html')
     abort(404)
-
+#TODO: Fix buttons change doctor after delete (just design)
 
 @app.route('/medical_examinations')
 def medical_examinations():
     if session.get('isAdmin') or session.get('isDoctor'):
         health_problem_names={}
         for request in ExaminationRequest.query:
-            health_problem_names[request._id]= HealthProblem.query.filter_by(_id=request.health_problem_id).first().name
+            health_problem_names[request.id]= HealthProblem.query.filter_by(_id=request.health_problem_id).first().name
 
         doctor_received_by_names={}
         for request in ExaminationRequest.query:
-            doctor_received_by_names[request._id]= User.query.filter_by(_id=request.received_by).first().surname
-
+            if request.received_by:
+                doctor_received_by_names[request.id]= User.query.filter_by(_id=request.received_by).first().surname
         doctor_created_by_names={}
         for request in ExaminationRequest.query:
-            doctor_created_by_names[request._id]= User.query.filter_by(_id=request.created_by).first().surname
+            doctor_created_by_names[request.id]= User.query.filter_by(_id=request.created_by).first().surname
 
         return render_template('doctor_only/medical_examinations.html',
                                requests=ExaminationRequest.query, health_problem_names=health_problem_names,doctor_received_by_names=doctor_received_by_names,doctor_created_by_names=doctor_created_by_names)
@@ -339,14 +356,26 @@ def medical_examinations():
 @app.route('/payment_request',  methods=['GET', 'POST'])
 def payment_request():
     if session.get('isAdmin') or session.get('isInsurance'):
+        templates=PaymentTemplate.query.all()
         if request.method == 'POST':
             data = request.form.to_dict()
+            template=PaymentTemplate.query.filter_by(name=data['template']).first()
+            if template == None:
+                flash("Neznámý typ zákroku")
+                return render_template('doctor_only/payment_request.html', data=data, templates=templates)
+            data['template']=template._id
             add_row(PaymentRequest, **data, creator=session.get('user_id'),
                     examination_request=session.get('examination_request'),
                     validator = 1 )  # je to vzdy 1 <- musi se to nejak upravit at je to korektne
-        return render_template('doctor_only/payment_request.html')
+            flash("Žádost podána")
+        return render_template('doctor_only/payment_request.html',templates=templates)
     abort(404)
 
+@app.route('/process_delete/<int:id>')
+def process_delete(id):
+    ExaminationRequest.query.filter_by(id=id).delete()
+    db.session.commit()
+    return redirect(url_for('medical_examinations'))
 
 @app.route('/medical_examination', methods=['GET', 'POST'])
 def medical_examination():
@@ -358,6 +387,15 @@ def medical_examination():
         doctor_created_by= User.query.filter_by(_id=e_request.created_by).first()
         health_problem_name = HealthProblem.query.filter_by(_id=e_request.health_problem_id).first().name
         if request.method == 'POST':
+            if e_request.received_by == None:
+                email=request.form['replacement_name']
+                user_id =User.query.filter_by(email=email).first()._id
+                e_request.received_by=user_id
+                doctor_received_by = User.query.filter_by(_id=e_request.received_by).first()
+                db.session.commit()
+                return render_template('doctor_only/medical_examination.html',
+                                       e_request=e_request, health_problem_name=health_problem_name,
+                                       doctor_received_by=doctor_received_by, doctor_created_by=doctor_created_by)
             e_request.state= "Vyřízeno"
             db.session.commit()
             return redirect(url_for('medical_examinations'))

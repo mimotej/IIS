@@ -9,7 +9,6 @@
                 <th scope="col" style="width: 140px">ID</th>
                 <th scope="col" style="width: 240px">Název</th>
                 <th scope="col" style="width: 140px">Stav</th>
-                <th scope="col" style="width: 480px">Lékařská zpráva</th>
                 <th scope="col" style="width: 380px">Popis</th>
                 <th></th>
             </tr>
@@ -20,8 +19,6 @@
                                                          class="input-row"></td>
                 <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
                 <td><input style="border-radius: 0" type="text" placeholder="" name="state" class="input-row"></td>
-                <td><input style="border-radius: 0" type="text" placeholder="" name="medical_report" class="input-row">
-                </td>
                 <td></td>
                 <td>
                     <button class="button input-row" type="submit">Hledat</button>
@@ -33,7 +30,6 @@
                 <th class="custom-button" scope="row" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{ problem._id}}</th>
                 <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.name}}</td>
                 <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.state}}</td>
-                <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">TODO</td>
                 <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.description}}</td>
                 <td  class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;"class="">
                    Detail
@@ -42,7 +38,6 @@
             {%endfor%}
                         <tr>
                 <th></th>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td ></td>

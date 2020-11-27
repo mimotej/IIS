@@ -3,27 +3,47 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="report">
+        {% if e_request.received_by == None %}
+        <div>
+            <label><b >Jméno bylo smazáno třeba změnit:</b></label><br />
+            <button class="button" style="width: 200px;" type="button" onclick="document.getElementById('md02').style.display='block'">
+                    Změnit vyřizujícího doktora
+            </button>
+            <button class="button" style="width: 200px;" type="button" onclick="document.location = '{{url_for('process_delete',id=e_request.id)}}';">
+                Smazat
+            </button>
+        </div>
+        {% endif %}
         <div >
-            <label><b>Název žádosti:</b></label>
-            <div>{{e_request.name}}</div>
+            <label> <b>Název žádosti:  </b>{{e_request.name}}</label>
+        </div>
+            <div >
+            <label ><b>Jméno zadavatele:</b>
+            {{doctor_created_by.name}} {{doctor_created_by.surname}}
+                </label>
+        </div>
+        <div>
+            <label><b>Jméno vyřizujícího lékaře:</b>
+            {{doctor_received_by.name}} {{doctor_received_by.surname}}
+            </label>
+        </div>
+        <div>
+            <label><b>Stav:</b>
+            {{e_request.state}}
+                </label>
         </div>
         <div >
-            <label><b>Jméno ošetřujícího lékaře:</b></label>
-            <div>{{doctor_received_by.name}} {{doctor_received_by.surname}}</div>
+            <label><b>Zdravotní problém:</b>
+            {{health_problem_name }}
+            </label>
         </div>
         <div >
-            <label><b>Zdravotní problém:</b></label>
-            <div>{{health_problem_name }}</div>
-        </div>
-        <div >
-            <label><b>Jméno zadavatele:</b></label>
-            <div>{{doctor_created_by.name}} {{doctor_created_by.surname}}</div>
-        </div>
-        <div >
-            <label><b>Popis :</b></label>
+            <label><b>Popis:</b>
             <div>{{e_request.description}}</div>
+                </label>
         </div>
-        {#% if e_request.received_by == session[user_id]: %#}
+
+        {% if e_request.received_by == session['user_id'] %}
         <div style="width: 900px;">
         <button class="button" style="width: 200px;" type="button" onclick="document.location = 'payment_request';">
                         Zažádat o proplacení
@@ -39,6 +59,19 @@
             </form>
             </div>
         </div>
-        {#% endif %#}
+        {% endif %}
+    </div>
+    <div id="md02" class="modal">
+    <form id="md01_login" class="modal-body animation" method="post">
+
+        <span onclick="document.getElementById('md02').style.display='none';"
+              class="close" title="Zavřít">&times;</span>
+
+        <div class="content-modal">
+            <label for="replacement_name"><b>E-mail náhradního doktora</b></label>
+            <input type="email" placeholder="Zadejte e-mailovou adresu" name="replacement_name" required>
+            <button class="button" type="submit" value="delete_user" name="submit_button">Změnit</button>
+        </div>
+    </form>
     </div>
 {% endblock %}

@@ -31,7 +31,7 @@ class User(db.Model):
     email = db.Column(db.String(50), nullable=False, unique=True)
     phone = db.Column(db.String(50), nullable=False)
     address = db.Column(db.String(100))
-    birth_date = db.Column(db.DateTime)
+    city = db.Column(db.String(255))
     isAdmin = db.Column("isAdmin", db.Boolean(), default=False)
     isDoctor = db.Column("isDoctor", db.Boolean(), default=False)
     isInsurance = db.Column("isInsurance", db.Boolean(), default=False)
@@ -42,6 +42,7 @@ class User(db.Model):
         self.password = data.get('password')
         self.email = data.get('email')
         self.phone = data.get('phone')
+        self.city = data.get('city')
         self.isInsurance = data.get('isInsurance') == "True"
         self.isAdmin = data.get('isAdmin') == "True"
         self.isDoctor = data.get('isDoctor') == "True"
@@ -61,6 +62,7 @@ class User(db.Model):
         self.email = kwargs['email'] if kwargs.get('email') else self.email
         self.phone = kwargs['phone'] if kwargs.get('phone') else self.phone
         self.address = kwargs['address'] if kwargs.get('address') else self.address
+        self.city = kwargs['city'] if kwargs.get('city') else self.address
         self.isAdmin == kwargs['isadmin'] == "True"  if kwargs.get('isadmin') else self.isAdmin
         self.isDoctor = kwargs['isdoctor'] =="True" if kwargs.get('isdoctor') else self.isDoctor
         self.isInsurance == kwargs['isinsurance'] == "True"  if kwargs.get('isinsurance') else self.isAdmin
@@ -73,10 +75,7 @@ class User(db.Model):
 
     def delete(self, sub_doc_id=False):
         if self.isDoctor or self.isAdmin:
-            if not sub_doc_id:
-                logger.debug("You have to provide substitute doctor id whe you delete a doctor")  # TODO flash message?
-                return False
-            elif not User.query.filter_by(_id=sub_doc_id).first():
+            if not User.query.filter_by(_id=sub_doc_id).first():
                 logger.debug("Provided substitute doctor id invalid")  # TODO flash message?
                 return False
             else:
@@ -85,12 +84,12 @@ class User(db.Model):
                     q.doctor_id = sub_doc_id
                 query = ExaminationRequest.query.filter_by(created_by=self._id).all()
                 for q in query:
-                    q.created_by = sub_doc_id
-                    q.description = "Doctor deleted, assign"
+                    if q.created_by == self._id:
+                        q.created_by = sub_doc_id
                 query = ExaminationRequest.query.filter_by(received_by=self._id).all()
                 for q in query:
-                    q.received_by = sub_doc_id
-                    q.description = "Doctor deleted, assign"
+                    if q.received_by == self._id:
+                        q.received_by = None
                 query = MedicalReport.query.filter_by(author=self._id).all()
                 for q in query:
                     q.author = sub_doc_id                
@@ -134,14 +133,14 @@ class HealthProblem(db.Model):
 
 class ExaminationRequest(db.Model):
     __tablename__ = 'examination_request'
-    _id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column("name", db.String(64), nullable=False)
     description = db.Column("description", db.String(1024))
     state = db.Column("state", db.String(16), nullable=False)
     created_by = db.Column("created_by", db.Integer,
                            db.ForeignKey('users._id'), nullable=False)
     received_by = db.Column("received_by", db.Integer,
-                            db.ForeignKey('users._id'), nullable=False)
+                            db.ForeignKey('users._id'), nullable=True)
     health_problem_id = db.Column(db.ForeignKey('health_problems._id'),
         nullable=True)
 
@@ -159,19 +158,20 @@ class MedicalReport(db.Model):
     Name = db.Column(db.String(1024))
     content = db.Column(db.String(2048))
     attachment_name = db.Column(db.String(1024))
-    health_problem = db.Column(db.Integer, db.ForeignKey('health_problems._id'),
+    health_problem = db.Column(db.ForeignKey('health_problems._id'),
                                nullable=False)
     author = db.Column(db.ForeignKey('users._id'), nullable=False)
-    #examination_request = db.Column("health_problem_id", db.Integer,
-    #                                db.ForeignKey('examination_request._id'),
-    #                                nullable=True)
+    examination_request = db.Column("health_problem_id", db.Integer,
+                                    db.ForeignKey('health_problems._id'),
+                                    nullable=True)
+
     def __init__(self, data):
         self.Name= data.get('Name')
         self.health_problem = data.get('health_problem_id')
         self.author = data.get('author')
         self.content = data.get('content')
         self.attachment_name = data.get('attachment')
-        #self.examination_request = data.get('examination_request')
+        self.examination_request = data.get('examination_request')
 
 
 # Je toto potřeba záznam z vyšetření by měla být zpráva a podání žádosti
@@ -201,7 +201,7 @@ class PaymentRequest(db.Model):
     validator = db.Column("validator", db.Integer, db.ForeignKey('users._id'))
     examination_request = db.Column(
         "examination_request", db.Integer,
-        db.ForeignKey('examination_request._id'), nullable=False
+        db.ForeignKey('examination_request.id'), nullable=False
     )
     state = db.Column(db.String(256), nullable=True)
 
@@ -210,7 +210,7 @@ class PaymentRequest(db.Model):
         self.creator = data.get('creator')
         self.validator = data.get('validator')
         self.examination_request = data.get('examination_request')
-        self.state = data.get('state', 'waiting')
+        self.state = data.get('state', 'Čekající')
         # self.medical_intervention = data.get('medical_intervention')
 
 

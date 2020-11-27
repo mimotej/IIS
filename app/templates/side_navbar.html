@@ -16,13 +16,13 @@
             {% endif %}
     {% endif %}
     {% if "isAdmin" in session or "isInsurance" in session %}
-        {% if session["isDoctor"]==1 or session["isInsurance"]==1 %}
+        {% if session["isAdmin"]==1 or session["isInsurance"]==1 %}
     <div class="hover-button {% if active_page=="paid_action" %}active {% endif %}side-navbar-cell"><a
             href="/paid_action_db">Databáze úkonů</a></div>
             {% endif %}
     {% endif %}
     {% if "isAdmin" in session or "isInsurance" in session %}
-        {% if session["isDoctor"]==1 or session["isInsurance"]==1 %}
+        {% if session["isAdmin"]==1 or session["isInsurance"]==1 %}
     <div class="hover-button {% if active_page=="manage_paid_action" %}active {% endif %}side-navbar-cell"><a
             href="/manage_paid_actions">Správa úkonů</a></div>
             {% endif %}

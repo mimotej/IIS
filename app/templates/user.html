@@ -28,12 +28,18 @@
             <div class="user-form-item"><label id="custom-label" for="tel-number"><b>Telefonní číslo :</b></label><input
                     type="tel" pattern="[0-9]{9}" id="edit-user-form" placeholder="" class="edit-user-form-input" name="phone"><span
                     id="edit-user-form" class="edit-user-form-input" style="display: block">{{user.phone}}</span></div>
-            <div class="user-form-item"><label id="custom-label" for="home"><b>Bydliště :</b></label><input type="text"
+            <div class="user-form-item"><label id="custom-label" for="home"><b>Adresa :</b></label><input type="text"
                                                                                                             id="edit-user-form"
                                                                                                             placeholder=""
                                                                                                             class="edit-user-form-input"
                                                                                                             name="address" ><span
                     id="edit-user-form" class="edit-user-form-input" style="display: block">{{ user.address }}</span></div>
+                <div class="user-form-item"><label id="custom-label" for="home"><b>Město :</b></label><input type="text"
+                                                                                                            id="edit-user-form"
+                                                                                                            placeholder=""
+                                                                                                            class="edit-user-form-input"
+                                                                                                            name="city" ><span
+                    id="edit-user-form" class="edit-user-form-input" style="display: block">{{ user.city }}</span></div>
                             <div class="user-form-item"><label id="custom-label" for="home"><b>Admin :</b></label><input type="checkbox"
                                                                                                             id="edit-user-form"
                                                                                                             placeholder=""
@@ -52,14 +58,20 @@
                                                                                                             class="edit-user-form-input"
                                                                                                             name="isinsurance" {% if user.isInsurance == True %}checked{% endif %} value="True"><span
                     id="edit-user-form" class="edit-user-form-input" style="display: block; font-size: 32px" ">{% if user.isInsurance == True %}&#10003;{% else %}&times;{% endif %}</span></div>
-                {% if session["isAdmin"] %}
-                    <button id="" class="button edit-user-form-input button-edit-user-form-input" type="submit"  value="delete_user" name="submit_button">
-                        Smazat
-                    </button>
-                    {% endif %}
                 <button id="edit-user-form" class="button edit-user-form-input button-edit-user-form-input" type="submit" value="update_user" name="submit_button">
                 Změnit
             </button>
+                {% if session["isAdmin"] %}
+                    {% if user.isAdmin or user.isDoctor %}
+                    <button id="" class="button edit-user-form-input button-edit-user-form-input" type="button" name="submit_button" onclick="document.getElementById('md02').style.display='block'">
+                        Smazat
+                    </button>
+                    {% else%}
+                    <button id="" class="button edit-user-form-input button-edit-user-form-input" type="submit"  value="delete_user" name="submit_button">
+                        Smazat
+                    </button>
+                        {% endif %}
+                    {% endif %}
         </div>
         </form>
                 <!-- not sure what it does so I will leave it here but delete later!, tohle bylo tmp logout tlacitko, muzes smazat
@@ -75,5 +87,18 @@
             {% endif %}
             -->
         </div>
+    </div>
+    <div id="md02" class="modal">
+    <form id="md01_login" class="modal-body animation" method="post">
+
+        <span onclick="document.getElementById('md02').style.display='none';"
+              class="close" title="Zavřít">&times;</span>
+
+        <div class="content-modal">
+            <label for="replacement_name"><b>E-mail náhradního doktora</b></label>
+            <input type="email" placeholder="Zadejte e-mailovou adresu" name="replacement_name" required>
+            <button class="button" type="submit" value="delete_user" name="submit_button">Změnit</button>
+        </div>
+    </form>
     </div>
 {% endblock %}

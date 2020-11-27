@@ -1,14 +1,14 @@
 <!--Registrační/přihlašovací formulář  -->
-<div id="md01" class="modal">
+<div id="md01" {% if 'bad_password' in session %}style="display: block"{% endif %} class="modal">
     <form id="md01_login" class="modal-body animation" action="{{ url_for('login') }}" method="post">
 
         <span onclick="document.getElementById('md01_register').style.display='none';document.getElementById('md01_login').style.display='block'; document.getElementById('md01').style.display='none';"
               class="close" title="Zavřít">&times;</span>
 
         <div class="content-modal">
-            <label for="e-mail"><b>E-mail</b></label>
-            <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="email" required>
-            <label for="password"><b>Heslo</b></label>
+            <label for="e-mail"><b>E-mail: (Povinné)</b></label>
+            <input type="email" {% if 'email_bad' in session %} value="{{session['email_bad']}}" {% endif %} placeholder="Zadejte svou e-mailovou adresu" name="email" required>
+            <label for="password"><b>Heslo: (Povinné)</b></label>
             <input type="password" placeholder="Zadejte heslo" name="password" required>
             <div></div>
             <button class="button" type="submit">Přihlásit se</button>
@@ -22,19 +22,23 @@
                 <span onclick="document.getElementById('md01_register').style.display='none';document.getElementById('md01_login').style.display='block'; document.getElementById('md01').style.display='none';"
               class="close" title="Zavřít">&times;</span>
             <div class="content-modal">
-            <label for="name"><b>Jméno</b></label>
+            <label for="name"><b>Jméno:</b></label>
             <input type="text" placeholder="Zadejte své jméno" name="name" required>
-            <label for="surname"><b>Prijmeni</b></label>
+            <label for="surname"><b>Příjmení:</b></label>
             <input type="text" placeholder="Zadejte své prijmeni" name="surname" required>
-            <label for="email"><b>E-mail</b></label>
+            <label for="email"><b>E-mail:</b></label>
             <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="email" required>
-            <label for="password"><b>Heslo</b></label>
+            <label for="password"><b>Heslo:</b></label>
             <input type="password" placeholder="Zadejte heslo" name="password" required>
-            <label for="phone"><b>Telefonní číslo</b></label>
+            <label for="phone"><b>Telefonní číslo:</b></label>
             <input type="tel" placeholder="Zadejte své telefonní číslo" name="phone" pattern="[0-9]{9}">
-            <label for="address"><b>Adresa</b></label>
+            <label for="address"><b>Adresa:</b></label>
             <input type="text" placeholder="Zadejte svou adresu" name="address">
+                <label for="address"><b>Město:</b></label>
+            <input type="text" placeholder="Zadejte svou adresu" name="city">
+            <div>
             <button class="button" type="submit">Registrovat</button>
+            </div>
         </div>
     </form>
 </div>

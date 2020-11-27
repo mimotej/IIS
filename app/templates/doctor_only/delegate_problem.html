@@ -6,9 +6,9 @@
     <div class="add-user-form">
         <div>
             <label for="name"><b>ID</b></label>
-            <input type="text" placeholder="Zadejte ID doktora" name="id_doctor" required>
-            <div>
-                <button class="button" type="submit">Předat</button>
+            <input type="text" placeholder="Zadejte ID doktora" name="id_doctor" {% if id_doctor is defined %} value="{{ id_doctor }}" {% endif %} required>
+            <div style="display: grid; justify-items: center; margin-top: 25px">
+                <button class="button"  type="submit">Předat</button>
             </div>
         </div>
     </div>

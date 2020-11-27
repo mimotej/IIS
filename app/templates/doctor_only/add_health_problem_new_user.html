@@ -5,44 +5,53 @@
   <form id="health_problem"  action="{{ url_for('health_problem') }}" method="post">
     <div class="add-user-form">
         <div>
-            <label><b>Uživatel již registrován?</b></label>
-            <button class="button input-row" type="button" onclick="document.location = 'health_old';">Přidat</button>
+            <label style="padding-right: 150px"><b>Uživatel již registrován?</b></label>
+            <button style="border-radius: 10px;" class="button input-row" type="button" onclick="document.location = 'health_old';">Přidat</button>
         </div>
-        <div>
-            <label for="name"><b>Jméno</b></label>
-            <input type="text" placeholder="Zadejte své jméno" name="name">
+        <div style="width: 75%">
+            <label for="name"><b>Jméno :</b></label>
+            <input type="text" placeholder="Zadejte své jméno" {% if data is defined %}value="{{ data['name'] }}" {% endif %}name="name">
         </div>
-        <div>
-            <label for="surname"><b>Příjmení</b></label>
-            <input type="text" placeholder="Zadejte své příjmení" name="surname">
+        <div style="width: 75%">
+            <label for="surname"><b>Příjmení :</b></label>
+            <input type="text" placeholder="Zadejte své příjmení"{% if data is defined %}value="{{ data['surname'] }}" {% endif %} name="surname">
         </div>
-        <div>
-            <label for="e-mail"><b>E-mail</b></label>
-            <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="email" required>
+        <div style="width: 75%">
+            <label for="e-mail"><b>E-mail : (Povinné)</b></label>
+            <input type="email" placeholder="Zadejte svou e-mailovou adresu" {% if data is defined %}value="{{ data['email'] }}" {% endif %} name="email" required>
         </div>
-        <div><label for="password-reg"><b>Heslo</b></label>
-            <input type="password" placeholder="Zadejte heslo" name="password">
+        <div style="width: 75%">
+            <label for="password-reg"><b>Heslo : (Povinné)</b></label>
+            <input type="password" placeholder="Zadejte heslo" name="password" required>
         </div>
-        <div><label for="phone-reg"><b>Telefonní číslo</b></label>
-            <input type="tel" placeholder="Zadejte své telefonní číslo" name="phone" pattern="[0-9]{9}">
+        <div style="width: 75%">
+            <label for="phone-reg"><b>Telefonní číslo : (Povinné)</b></label>
+            <input type="tel" placeholder="Zadejte své telefonní číslo" {% if data is defined %}value="{{ data['phone'] }}" {% endif %} name="phone" pattern="[0-9]{9}">
         </div>
-        <div><label for="address"><b>Adresa</b></label>
-            <input type="text" placeholder="Zadejte svou adresu" name="address">
+        <div style="width: 75%">
+            <label for="address"><b>Adresa :</b></label>
+            <input type="text" placeholder="Zadejte svou adresu" {% if data is defined %}value="{{ data['address'] }}" {% endif %} name="address">
         </div>
-        <div><label for="name_problem"><b>Název</b></label>
-            <input type="text" placeholder="Zadejte název problému" name="name_problem">
+        <div style="width: 75%">
+            <label for="address"><b>Město :</b></label>
+            <input type="text" placeholder="Zadejte město"{% if data is defined %}value="{{ data['city'] }}" {% endif %} name="city">
         </div>
-        <div><label for="state"><b>Stav</b></label>
-            <input type="text" placeholder="Zadejte stav" name="state">
+        <div style="width: 75%">
+            <label for="name_problem"><b>Název problému:</b></label>
+            <input type="text" placeholder="Zadejte název problému" {% if data is defined %}value="{{ data['name_problem'] }}" {% endif %} name="name_problem">
         </div>
-        <div><label for="description"><b>Popis</b></label><br>
-            <textarea type="text" placeholder="Zadejte stav" name="description"></textarea>
+        <div style="width: 75%">
+            <label for="state"><b>Stav :</b></label>
+            <input type="text" placeholder="Zadejte stav" {% if data is defined %}value="{{ data['state'] }}" {% endif %} name="state">
+        </div>
+        <div><label for="description"><b>Popis :</b></label><br>
+            <textarea type="text" style="width: 440px; height: 150px" placeholder="Zadejte stav" name="description">{% if data is defined %}{{ data['description'] }} {% endif %}</textarea>
         </div>
         <!--div><label for="report"><b>Lékařská zpráva</b></label>
             <input type="file" placeholder="Zadejte lékařskou zprávu" name="report">
         </div-->
-        <div>
-            <button class="button" type="submit">Vytvořit</button>
+        <div style="display: grid; justify-items: center; margin-top: 25px">
+            <button class="button" type="submit" style="width: 100px">Vytvořit</button>
         </div>
     </div>
   </form>
