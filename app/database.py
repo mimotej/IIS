@@ -236,18 +236,6 @@ class PaymentTemplate(db.Model):
         self.type = data.get('type')
 
 
-def permitted_query(table, permission):
-    '''Return all table rows if permission granted'''
-    # In case of direct access, show empty list
-    value = []
-    if permission:
-        value = table.query
-    if not value:
-        # In case error occures on DB side
-        value = []
-    return value
-
-
 def add_row(Table, **kwargs):
     '''Add row to table'''
     row_instance = Table(kwargs)
@@ -265,6 +253,9 @@ def gen_id(Table):
     while Table.query.filter_by(_id=id).first():
         id = random.randint(1, MAX_INT_32)
     return id
+
+def filter(Table, **kwargs):
+    return Table.query.filter_by(**kwargs).all()
 
 db.create_all()
 db.session.commit()

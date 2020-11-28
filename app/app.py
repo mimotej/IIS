@@ -18,6 +18,15 @@ app.jinja_env.globals.update(zip=zip)
 SESSION_USER_DATA = ['isAdmin', 'isDoctor', 'isInsurance', 'user_id']
 
 
+USER_QUERY = ['_id', 'name', 'surname', 'email']
+
+def get_query(Table, TABLE_QUERY, values):
+    kwargs = { key: values.get(key) for key in TABLE_QUERY if values.get(key) }
+    if kwargs.get('_id'):
+        kwargs['_id'] = int(kwargs['_id'])
+    return Table.query.filter_by(**kwargs).all()
+
+
 @app.route('/')
 def index():
     '''Show health problems according to user permissions'''
@@ -124,13 +133,18 @@ def update_user(id):
     else:
         abort(404)
 
-@app.route('/manage_users')
+
+@app.route('/manage_users', methods=['GET', 'POST'])
 def manage_users():
     '''Manage users (admin only)'''
     if session.get('isAdmin'):
+        if request.method == 'POST' and request.form.get('filter'):
+            users = get_query(User, USER_QUERY, request.form)
+        else:
+            users = User.query.all()
         return render_template(
             'admin_only/manage_users.html',
-            users=permitted_query(User, session.get('isAdmin'))
+            users=users
         )
     abort(404)
 
@@ -140,8 +154,7 @@ def paid_action():
     if session.get('isAdmin') or session.get('isInsurance'):
         return render_template(
             'insurance_worker/paid_action_db.html',
-            p_templates=permitted_query(PaymentTemplate,
-                                        session.get('isInsurance'))
+            p_templates=PaymentTemplate.query.all()
         )
     abort(404)
 
