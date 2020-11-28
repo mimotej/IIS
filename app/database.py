@@ -5,9 +5,11 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 import os
+import random
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'uploads', 'reports')
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+MAX_INT_32 = 2**32
 
 logger.basicConfig(level=logger.DEBUG)  # Set logger for whatever reason
 app = Flask(__name__)
@@ -37,6 +39,7 @@ class User(db.Model):
     isInsurance = db.Column("isInsurance", db.Boolean(), default=False)
 
     def __init__(self, data):
+        self._id = gen_id(User)
         self.name = data.get('name')
         self.surname = data.get('surname')
         self.password = data.get('password')
@@ -121,6 +124,7 @@ class HealthProblem(db.Model):
                           nullable=False)
 
     def __init__(self, data):
+        self._id = gen_id(HealthProblem)
         self.name = data.get('name')
         self.description = data.get('description')
         self.state = data.get('state')
@@ -133,7 +137,7 @@ class HealthProblem(db.Model):
 
 class ExaminationRequest(db.Model):
     __tablename__ = 'examination_request'
-    id = db.Column(db.Integer, primary_key=True)
+    _id = db.Column(db.Integer, primary_key=True)
     name = db.Column("name", db.String(64), nullable=False)
     description = db.Column("description", db.String(1024))
     state = db.Column("state", db.String(16), nullable=False)
@@ -145,6 +149,7 @@ class ExaminationRequest(db.Model):
         nullable=True)
 
     def __init__(self, data):
+        self._id = gen_id(ExaminationRequest)
         self.health_problem_id = data.get('health_problem')
         self.name = data.get('name')
         self.state = data.get('state')
@@ -166,6 +171,7 @@ class MedicalReport(db.Model):
                                     nullable=True)
 
     def __init__(self, data):
+        self._id = gen_id(MedicalReport)
         self.Name= data.get('Name')
         self.health_problem = data.get('health_problem_id')
         self.author = data.get('author')
@@ -184,6 +190,7 @@ class MedicalIntervention(db.Model):
     price = db.Column(db.Integer, nullable=False)
 
     def __init__(self, executor, price, description=None):
+        self._id = gen_id(MedicalIntervention)
         self.executor = executor
         self.price = price
         self.description = description
@@ -201,11 +208,12 @@ class PaymentRequest(db.Model):
     validator = db.Column("validator", db.Integer, db.ForeignKey('users._id'))
     examination_request = db.Column(
         "examination_request", db.Integer,
-        db.ForeignKey('examination_request.id'), nullable=False
+        db.ForeignKey('examination_request._id'), nullable=False
     )
     state = db.Column(db.String(256), nullable=True)
 
     def __init__(self, data):
+        self._id = gen_id(PaymentRequest)
         self.template = data.get('template')
         self.creator = data.get('creator')
         self.validator = data.get('validator')
@@ -222,6 +230,7 @@ class PaymentTemplate(db.Model):
     type = db.Column(db.String(255), nullable=False)
 
     def __init__(self, data):
+        self._id = gen_id(PaymentTemplate)
         self.name = data.get('name')
         self.price = data.get('price')
         self.type = data.get('type')
@@ -249,6 +258,13 @@ def delete_query(query):
     for q in query:
         db.session.delete(q)
     db.session.commit()
+
+
+def gen_id(Table):
+    id = random.randint(1, MAX_INT_32)
+    while Table.query.filter_by(_id=id).first():
+        id = random.randint(1, MAX_INT_32)
+    return id
 
 db.create_all()
 db.session.commit()

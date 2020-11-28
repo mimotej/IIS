@@ -373,7 +373,7 @@ def payment_request():
 
 @app.route('/process_delete/<int:id>')
 def process_delete(id):
-    ExaminationRequest.query.filter_by(id=id).delete()
+    ExaminationRequest.query.filter_by(_id=id).delete()
     db.session.commit()
     return redirect(url_for('medical_examinations'))
 
@@ -382,7 +382,7 @@ def medical_examination():
     if session.get('isAdmin') or session.get('isDoctor'):
         request_id =  request.args.get('r_id')
         session['examination_request'] = request_id 
-        e_request = ExaminationRequest.query.filter_by(id=request_id).first()
+        e_request = ExaminationRequest.query.filter_by(_id=request_id).first()
         doctor_received_by= User.query.filter_by(_id=e_request.received_by).first()
         doctor_created_by= User.query.filter_by(_id=e_request.created_by).first()
         health_problem_name = HealthProblem.query.filter_by(_id=e_request.health_problem_id).first().name
