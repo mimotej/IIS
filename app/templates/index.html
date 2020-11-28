@@ -42,7 +42,11 @@
                 <td></td>
                 <td ></td>
                 <td>
+                    {% if 'isDoctor' in session or 'isAdmin' in session %}
+                    {% if session['isDoctor'] == 1 or session['isAdmin'] == 1 %}
                     <button class="button input-row" type="button" onclick="document.location = 'health';">Přidat</button>
+                    {% endif %}
+                    {% endif %}
                 </td>
             </tr>
             <!--{#% for row in rows %#}
