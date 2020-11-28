@@ -3,14 +3,13 @@ from flask import Flask, render_template, request, redirect, url_for, session,fl
 from database import *
 from datetime import timedelta
 import logging as logger
-from database import db, app
+from database import db, app, bcrypt
 import os
 from flask import send_from_directory, abort
 from random import randint 
 
 
 logger.basicConfig(level='DEBUG')
-bcrypt = Bcrypt(app)
 app.permanent_session_lifetime = timedelta(minutes=30)
 app.jinja_env.globals.update(zip=zip)
 
@@ -19,15 +18,17 @@ SESSION_USER_DATA = ['isAdmin', 'isDoctor', 'isInsurance', 'user_id']
 
 
 USER_QUERY = ['_id', 'name', 'surname', 'email']
+HEALT_PROBLEM_QUERY = ['_id', 'name', 'state']
+PAID_ACTION_QUERY = ['_id', 'name', 'price', 'type']
 
-def get_query(Table, TABLE_QUERY, values):
+def get_query(query, TABLE_QUERY, values):
     kwargs = { key: values.get(key) for key in TABLE_QUERY if values.get(key) }
     if kwargs.get('_id'):
         kwargs['_id'] = int(kwargs['_id'])
-    return Table.query.filter_by(**kwargs).all()
+    return query.filter_by(**kwargs).all()
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     '''Show health problems according to user permissions'''
     if session.get('isDoctor'):
@@ -37,7 +38,9 @@ def index():
             patient_id=session['user_id']
         )
     else:
-        problems = []
+        problems = HealthProblem.query.filter_by(_id=-1)
+    if request.method == 'POST':
+        problems = get_query(problems, HEALT_PROBLEM_QUERY, request.form)
     return render_template('index.html', problems=problems)
 
 
@@ -139,7 +142,7 @@ def manage_users():
     '''Manage users (admin only)'''
     if session.get('isAdmin'):
         if request.method == 'POST' and request.form.get('filter'):
-            users = get_query(User, USER_QUERY, request.form)
+            users = get_query(User.query, USER_QUERY, request.form)
         else:
             users = User.query.all()
         return render_template(
@@ -149,12 +152,17 @@ def manage_users():
     abort(404)
 
 
-@app.route('/paid_action_db')
+@app.route('/paid_action_db', methods=['GET', 'POST'])
 def paid_action():
     if session.get('isAdmin') or session.get('isInsurance'):
+        query = PaymentTemplate.query
+        if request.method == 'POST':
+            templates = get_query(query, PAID_ACTION_QUERY, request.form)
+        else:
+            templates = query.all()
         return render_template(
             'insurance_worker/paid_action_db.html',
-            p_templates=PaymentTemplate.query.all()
+            p_templates=templates
         )
     abort(404)
 
@@ -253,7 +261,7 @@ def manage_paid_actions():
         for req in p_requests:
             templates.append(PaymentTemplate.query.filter_by(_id=req.template).first())
             p_doctor[req._id]=User.query.filter_by(_id=req.creator).first().name
-        return render_template('insurance_worker/manage_paid_actions.html', p_requests = p_requests, p_templates = p_templates,templates = templates, p_doctor=p_doctor)
+        return render_template('insurance_worker/manage_paid_actions.html', p_requests = p_requests, templates = templates, p_doctor=p_doctor)
     abort(404)
 
 
@@ -422,12 +430,6 @@ def medical_examination():
 def page_not_found(e):
     return render_template('404_not_found.html'), 404
 
-
-def random_integer():
-    min_ = 100000
-    max_ = 999999
-    rand = randint(min_, max_)
-    return rand
 
 if __name__ == '__main__':
     db.create_all()

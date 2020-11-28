@@ -14,8 +14,9 @@
             </tr>
             </thead>
             <tbody>
+            <form action="/" method="post">
             <tr>
-                <td scope="row" class="input-row"><input type="text" style="border-radius: 0" placeholder="" name="ID"
+                <td scope="row" class="input-row"><input type="text" style="border-radius: 0" placeholder="" name="_id"
                                                          class="input-row"></td>
                 <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
                 <td><input style="border-radius: 0" type="text" placeholder="" name="state" class="input-row"></td>
@@ -24,6 +25,7 @@
                     <button class="button input-row" type="submit">Hledat</button>
                 </td>
             </tr>
+            </form>
 
             {% for problem in problems %}
                 <tr style="cursor:pointer">

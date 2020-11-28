@@ -9,10 +9,11 @@ import random
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'uploads', 'reports')
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-MAX_INT_32 = 2**32
+MAX_INT_32 = 2**20  # Skoro :D
 
 logger.basicConfig(level=logger.DEBUG)  # Set logger for whatever reason
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
@@ -66,9 +67,9 @@ class User(db.Model):
         self.phone = kwargs['phone'] if kwargs.get('phone') else self.phone
         self.address = kwargs['address'] if kwargs.get('address') else self.address
         self.city = kwargs['city'] if kwargs.get('city') else self.address
-        self.isAdmin == kwargs['isadmin'] == "True"  if kwargs.get('isadmin') else self.isAdmin
+        self.isAdmin = kwargs['isadmin'] == "True"  if kwargs.get('isadmin') else self.isAdmin
         self.isDoctor = kwargs['isdoctor'] =="True" if kwargs.get('isdoctor') else self.isDoctor
-        self.isInsurance == kwargs['isinsurance'] == "True"  if kwargs.get('isinsurance') else self.isAdmin
+        self.isInsurance = kwargs['isinsurance'] == "True"  if kwargs.get('isinsurance') else self.isInsurance
         logger.debug(kwargs)
         db.session.commit()
 
