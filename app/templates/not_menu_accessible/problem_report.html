@@ -41,7 +41,7 @@
             <label><b>Žádosti o vyšetření:</b></label>
             <ul>
             {% for examination in examinations %}
-                <li><div class="hide-button" onclick="document.location = 'medical_examination?r_id=' + {{examination.id}} ;" style="cursor: pointer">{{ examination.name }} - <b>Detail</b></div></li>
+                <li><div class="hide-button" onclick="document.location = 'medical_examination?r_id=' + {{examination._id}} ;" style="cursor: pointer">{{ examination.name }} - <b>Detail</b></div></li>
              {% endfor %}
             </ul>
         </div>

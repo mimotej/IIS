@@ -12,7 +12,6 @@ from random import randint
 logger.basicConfig(level='DEBUG')
 app.permanent_session_lifetime = timedelta(minutes=30)
 app.jinja_env.globals.update(zip=zip)
-
 # List of keys set during session
 SESSION_USER_DATA = ['isAdmin', 'isDoctor', 'isInsurance', 'user_id']
 
@@ -40,9 +39,10 @@ def index():
     else:
         problems = HealthProblem.query.filter_by(_id=-1)
     if request.method == 'POST':
-        problems = get_query(problems, HEALT_PROBLEM_QUERY, request.form)
+        data=request.form
+        #problems = get_query(problems, HEALT_PROBLEM_QUERY, request.form)
+        return render_template('index.html', problems=problems, data=data)
     return render_template('index.html', problems=problems)
-
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
@@ -85,6 +85,8 @@ def sign_up():
     data = request.form.to_dict()
     if User.query.filter_by(email=data['email']).first():
         flash("Zadaný účet je již existující, zkuste zadat jiný e-mail")
+        session['bad_password'] = True
+        return render_template('index.html', data=data)
     else:
         data['password'] = bcrypt.generate_password_hash(data['password'])
         add_row(User, **data)
@@ -172,7 +174,7 @@ def paid_action_new():
     if session.get('isAdmin') or session.get('isInsurance'):
         if request.method == "POST":
             add_row(PaymentTemplate, **request.form.to_dict())
-            flash("Událost vytvořena")
+            flash("Šablona vytvořena")
         return render_template('insurance_worker/manage_new_action.html')
     abort(404)
 
@@ -251,7 +253,7 @@ def add_user():
     abort(404)
 
 
-@app.route('/manage_paid_actions')
+@app.route('/manage_paid_actions',  methods=['GET', 'POST'])
 def manage_paid_actions():
     if session.get('isAdmin') or session.get('isInsurance'):
         p_requests = PaymentRequest.query
@@ -261,6 +263,10 @@ def manage_paid_actions():
         for req in p_requests:
             templates.append(PaymentTemplate.query.filter_by(_id=req.template).first())
             p_doctor[req._id]=User.query.filter_by(_id=req.creator).first().name
+        if request.method == "POST":
+            data=request.form
+            return render_template('insurance_worker/manage_paid_actions.html', p_requests=p_requests,
+                                   templates=templates, p_doctor=p_doctor, data=data)
         return render_template('insurance_worker/manage_paid_actions.html', p_requests = p_requests, templates = templates, p_doctor=p_doctor)
     abort(404)
 
@@ -354,26 +360,32 @@ def medical_report_creator(health_problem_id):
     abort(404)
 #TODO: Fix buttons change doctor after delete (just design)
 
-@app.route('/medical_examinations')
+@app.route('/medical_examinations',  methods=['GET', 'POST'])
 def medical_examinations():
     if session.get('isAdmin') or session.get('isDoctor'):
         health_problem_names={}
-        for request in ExaminationRequest.query:
-            health_problem_names[request.id]= HealthProblem.query.filter_by(_id=request.health_problem_id).first().name
+        for request_exam in ExaminationRequest.query:
+            health_problem_names[request_exam._id]= HealthProblem.query.filter_by(_id=request_exam.health_problem_id).first().name
 
         doctor_received_by_names={}
-        for request in ExaminationRequest.query:
-            if request.received_by:
-                doctor_received_by_names[request.id]= User.query.filter_by(_id=request.received_by).first().surname
+        for request_exam in ExaminationRequest.query:
+            if request_exam.received_by:
+                doctor_received_by_names[request_exam._id]= User.query.filter_by(_id=request_exam.received_by).first().surname
         doctor_created_by_names={}
-        for request in ExaminationRequest.query:
-            doctor_created_by_names[request.id]= User.query.filter_by(_id=request.created_by).first().surname
+        for request_exam in ExaminationRequest.query:
+            doctor_created_by_names[request_exam._id]= User.query.filter_by(_id=request_exam.created_by).first().surname
+
+        if request.method == "POST":
+            data=request.form
+            return render_template('doctor_only/medical_examinations.html',
+                                   requests=ExaminationRequest.query, health_problem_names=health_problem_names,
+                                   doctor_received_by_names=doctor_received_by_names,
+                                   doctor_created_by_names=doctor_created_by_names, data=data)
 
         return render_template('doctor_only/medical_examinations.html',
                                requests=ExaminationRequest.query, health_problem_names=health_problem_names,doctor_received_by_names=doctor_received_by_names,doctor_created_by_names=doctor_created_by_names)
     abort(404)
 
-### TODO Refactor adding table row
 @app.route('/payment_request',  methods=['GET', 'POST'])
 def payment_request():
     if session.get('isAdmin') or session.get('isInsurance'):
@@ -431,6 +443,77 @@ def page_not_found(e):
     return render_template('404_not_found.html'), 404
 
 
+@event.listens_for(User.__table__, 'after_create')
+def create_users(*args, **kwargs):
+    add_row(User, name="Jan", surname="Novák", password=bcrypt.generate_password_hash("password"),
+            email="novak@seznam.cz", phone="735443223", address="Na Příkopech 450", city="Brno",
+            birthnumber="9008125447", isAdmin="True", isDoctor="True", isInsurance="True")
+    add_row(User, name="Petr", surname="Pavel", password=bcrypt.generate_password_hash("password"),
+            email="pavel@seznam.cz", phone="735111223", address="U Hradu 111", city="Brno",
+            birthnumber="9801145447", isAdmin="True")
+    add_row(User, name="Josef", surname="Dvořák", password=bcrypt.generate_password_hash("password"),
+            email="dvorak@gmail.com", phone="700144213", address="Nábřeží 112", city="Brno",
+            birthnumber="7001185557", isDoctor="True")
+    add_row(User, name="Daniel", surname="Korn", password=bcrypt.generate_password_hash("password"),
+            email="korn@mail.com", phone="065222423", address="Pražská 555", city="Čáslav",
+            birthnumber="5501140447", isDoctor="True")
+    add_row(User, name="Petra", surname="Domovská", password=bcrypt.generate_password_hash("password"),
+            email="domovska@mail.com", phone="135485223", address="Stará 112", city="Brno",
+            birthnumber="4501145447", isDoctor="True")
+    add_row(User, name="Vladislav", surname="Jiný", password=bcrypt.generate_password_hash("password"),
+            email="jiny@seznam.cz", phone="222111243", address="Centrální", city="Brno",
+            birthnumber="9801445447")
+    add_row(User, name="Alžbeta", surname="Filipová", password=bcrypt.generate_password_hash("filip01"),
+            email="filipova@gmail.com", phone="700111223", address="Palackého 113", city="Vyškov",
+            birthnumber="7001145887", isInsurance="True")
+    add_row(User, name="Jan", surname="Nový", password=bcrypt.generate_password_hash("password"),
+            email="novy@gmail.com", phone="735121223", address="U Hradu 111", city="Brno",
+            birthnumber="9801145447", isInsurance="True")
+    add_row(User, name="Karel", surname="Veselý", password=bcrypt.generate_password_hash("password"),
+            email="vesely@centrum.cz", phone="744000223", address="Brněnská 745", city="Brumlov",
+            birthnumber="9801145447")
+    add_row(User, name="Richard", surname="Starý", password=bcrypt.generate_password_hash("password"),
+            email="stary@gmail.com", phone="735121223", address="Kolejení 2422", city="Jihlava",
+            birthnumber="9002145447")
+    add_row(User, name="Libuše", surname="Mladá", password=bcrypt.generate_password_hash("password"),
+            email="mlada@gmail.com", phone="735004423", address="Pumpa 8851", city="Brno",
+            birthnumber="9801425447")
+
+@event.listens_for(HealthProblem.__table__, 'after_create')
+def create_health_problem(*args, **kwargs):
+    user= User.query.filter_by(email="vesely@centrum.cz").first()._id
+    doctor= User.query.filter_by(email="dvorak@gmail.com").first()._id
+    add_row(HealthProblem, name="Problém č.1", description="Pacient se cítí být unaven a má nechutenství.", patient_id =user, doctor_id=doctor, state="Otevřeno")
+    user= User.query.filter_by(email="vesely@centrum.cz").first()._id
+    doctor= User.query.filter_by(email="korn@mail.com").first()._id
+    add_row(HealthProblem, name="Problém č.2", description="Pacient trpí bolestmi zad a má problémy s chůzí.", patient_id =user, doctor_id=doctor, state="Otevřeno")
+    user= User.query.filter_by(email="mlada@gmail.com").first()._id
+    doctor= User.query.filter_by(email="domovska@mail.com").first()._id
+    add_row(HealthProblem, name="Problém č.3", description="Pacient trpí bolestmi zad a má problémy s chůzí.", patient_id =user, doctor_id=doctor, state="Otevřeno")
+
+@event.listens_for(ExaminationRequest.__table__, 'after_create')
+def exam_request_create(*args, **kwargs):
+    user= User.query.filter_by(email="dvorak@gmail.com").first()._id
+    doctor= User.query.filter_by(email="korn@mail.com").first()._id
+    health_prob= HealthProblem.query.filter_by(name="Problém č.1").first()._id
+    add_row(ExaminationRequest, name="Žádost o vyšetření č.1", description="Žádám o vyšetření pacienta",created_by=user, receiver=doctor, health_problem=health_prob, state="Nevyřízeno")
+    user= User.query.filter_by(email="domovska@mail.com").first()._id
+    doctor= User.query.filter_by(email="korn@mail.com").first()._id
+    health_prob= HealthProblem.query.filter_by(name="Problém č.3").first()._id
+    add_row(ExaminationRequest, name="Žádost o vyšetření č.2", description="Žádám o vyšetření pacienta",created_by=user, receiver=doctor, health_problem=health_prob, state="Nevyřízeno")
+
+@event.listens_for(PaymentTemplate.__table__, 'after_create')
+def template_init(*args, **kwargs):
+    add_row(PaymentTemplate, name="Kyčelní kloub", price="4500",type="Operace")
+    add_row(PaymentTemplate, name="Korunka", price="1000",type="Zubní zákrok")
+@event.listens_for(PaymentRequest.__table__, 'after_create')
+def request_create(*args, **kwargs):
+    template =PaymentTemplate.query.all()[0]._id
+    doctor = User.query.filter_by(email="korn@mail.com").first()._id
+    validator = User.query.filter_by(email="novy@gmail.com").first()._id
+    exam = ExaminationRequest.query.all()[0]._id
+    add_row(PaymentRequest, template=template, creator=doctor, validator=validator, examination_request=exam)
 if __name__ == '__main__':
+    #db.drop_all() # odstraní původní db a nahradí novou
     db.create_all()
     app.run(debug=True, host='0.0.0.0')

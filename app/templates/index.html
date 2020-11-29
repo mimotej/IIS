@@ -28,15 +28,29 @@
             </form>
 
             {% for problem in problems %}
+                {% if data is defined %}
+                    {% if data.get("_id") == problem._id or data.get("name") == problem.name or data.get("state") == problem.state%}
                 <tr style="cursor:pointer">
                 <th class="custom-button" scope="row" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{ problem._id}}</th>
                 <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.name}}</td>
                 <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.state}}</td>
-                <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.description}}</td>
+                <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.description|truncate(40)  }}</td>
                 <td  class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;"class="">
                    Detail
                 </td>
-            </tr>
+                </tr>
+                        {% endif %}
+                    {% else %}
+                    <tr style="cursor:pointer">
+                <th class="custom-button" scope="row" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{ problem._id}}</th>
+                <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.name}}</td>
+                <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.state}}</td>
+                <td class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;">{{problem.description|truncate(40)  }}</td>
+                <td  class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{problem._id}} ;"class="">
+                   Detail
+                </td>
+                </tr>
+                {% endif %}
             {%endfor%}
                         <tr>
                 <th></th>

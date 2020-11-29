@@ -5,11 +5,11 @@
     <div class="report">
         {% if e_request.received_by == None %}
         <div>
-            <label><b >Jméno bylo smazáno třeba změnit:</b></label><br />
-            <button class="button" style="width: 200px;" type="button" onclick="document.getElementById('md02').style.display='block'">
+            <label><b >Jméno bylo smazáno třeba změnit:</b></label>
+            <button class="button" style="width: 250px;" type="button" onclick="document.getElementById('md02').style.display='block'">
                     Změnit vyřizujícího doktora
             </button>
-            <button class="button" style="width: 200px;" type="button" onclick="document.location = '{{url_for('process_delete',id=e_request.id)}}';">
+            <button class="button" style="width: 200px;" type="button" onclick="document.location = '{{url_for('process_delete',id=e_request._id)}}';">
                 Smazat
             </button>
         </div>
@@ -45,7 +45,7 @@
 
         {% if e_request.received_by == session['user_id'] %}
         <div style="width: 900px;">
-        <button class="button" style="width: 200px;" type="button" onclick="document.location = 'payment_request';">
+        <button class="button" style="width: 200px;" type="button" onclick="document.location = '/payment_request';">
                         Zažádat o proplacení
         </button>
             <button class="button" style="width: 200px;" type="button" onclick="document.location = '{{ url_for('medical_report_creator', health_problem_id=e_request.health_problem_id) }}';">

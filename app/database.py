@@ -3,26 +3,27 @@ import pickle
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import event
 from werkzeug.utils import secure_filename
 import os
 import random
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(APP_ROOT, 'uploads', 'reports')
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-MAX_INT_32 = 2**20  # Skoro :D
+MAX_INT_32 = 2147483647-1
 
 logger.basicConfig(level=logger.DEBUG)  # Set logger for whatever reason
 app = Flask(__name__)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@127.0.0.1/IIS'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://xdrlam00:Mimak123@mysqltestingxdrlam.mysql.database.azure.com/testdbmysql' #třeba zakomentovat a odkomentovat lokální a upravit přihlašovací údaje
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = 'a4b32a254b543f4d5e44ed255a4b22c1'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Iis2020?@127.0.0.1/IIS'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://flask:Password<3@127.0.0.1/IIS'
 app.config['SECRET_KEY'] = '1f3118edada4643f34538ea423d32b21'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 class User(db.Model):
@@ -35,6 +36,7 @@ class User(db.Model):
     phone = db.Column(db.String(50), nullable=False)
     address = db.Column(db.String(100))
     city = db.Column(db.String(255))
+    birthNumber = db.Column(db.String(255))
     isAdmin = db.Column("isAdmin", db.Boolean(), default=False)
     isDoctor = db.Column("isDoctor", db.Boolean(), default=False)
     isInsurance = db.Column("isInsurance", db.Boolean(), default=False)
@@ -46,7 +48,9 @@ class User(db.Model):
         self.password = data.get('password')
         self.email = data.get('email')
         self.phone = data.get('phone')
+        self.address = data.get('address')
         self.city = data.get('city')
+        self.birthNumber = data.get('birthnumber')
         self.isInsurance = data.get('isInsurance') == "True"
         self.isAdmin = data.get('isAdmin') == "True"
         self.isDoctor = data.get('isDoctor') == "True"
@@ -96,7 +100,10 @@ class User(db.Model):
                         q.received_by = None
                 query = MedicalReport.query.filter_by(author=self._id).all()
                 for q in query:
-                    q.author = sub_doc_id                
+                    q.author = sub_doc_id
+                query = PaymentRequest.query.filter_by(creator=self._id).all()
+                for q in query:
+                    q.creator = sub_doc_id
         if self.isInsurance or self.isAdmin:
             query = PaymentRequest.query.filter_by(creator=self._id).all()
             for q in query:
@@ -235,6 +242,18 @@ class PaymentTemplate(db.Model):
         self.name = data.get('name')
         self.price = data.get('price')
         self.type = data.get('type')
+
+
+def permitted_query(table, permission):
+    '''Return all table rows if permission granted'''
+    # In case of direct access, show empty list
+    value = []
+    if permission:
+        value = table.query
+    if not value:
+        # In case error occures on DB side
+        value = []
+    return value
 
 
 def add_row(Table, **kwargs):

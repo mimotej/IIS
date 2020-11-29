@@ -19,8 +19,11 @@
         <div><label for="password-reg"><b>Heslo:</b></label>
             <input type="password" placeholder="Zadejte heslo" name="password" required>
         </div>
-        <div><label for="phone-reg"><b>Telefonní číslo: (Required)</b></label>
+        <div><label for="phone-reg"><b>Telefonní číslo: (Povinné - formát - 000000000)</b></label>
             <input type="tel" placeholder="Zadejte své telefonní číslo"{% if data is defined %}value="{{ data['phone'] }}" {% endif %} name="phone" pattern="[0-9]{9}">
+        </div>
+        <div><label for="birth-number-reg"><b>Rodné číslo číslo:</b></label>
+            <input type="number" placeholder="Zadejte své rodné číslo"{% if data is defined %}value="{{ data['birthnumber'] }}" {% endif %} name="birthnumber">
         </div>
         <div><label for="address"><b>Adresa:</b></label>
             <input type="text" placeholder="Zadejte svou adresu" {% if data is defined %}value="{{ data['address'] }}" {% endif %} name="address">

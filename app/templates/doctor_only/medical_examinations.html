@@ -27,18 +27,34 @@
                 </td>
             </tr>
                 {% for request in requests%}
-                    {% if request.state == "Nevyřízeno"  and request.received_by == session['user_id']%}
+                {% if data is defined %}
+                    {% if data.get("ID") == request._id or data.get("doctor_created_name") == doctor_created_by_names[request._id] or data.get("doctor_name") == request.name or
+                            data.get("name")==doctor_received_by_names[request._id] or data.get("health_problem") == health_problem_names[request._id]%}
                     <tr style="cursor: pointer">
-                <th class="custom-button" scope="row" onclick="document.location = 'medical_examination?r_id=' + {{request.id}} ;">{{request.id}}</th>
-                <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request.id}} ;" >{{doctor_created_by_names[request.id]}}</td>
-                <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request.id}} ;" >{{request.name}}</td>
-                <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request.id}} ;" >{{doctor_received_by_names[request.id]}}</td>
-                <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request.id}} ;">{{health_problem_names[request.id]}}</td>
-                <td  class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{request.id}} ;">
+                <th class="custom-button" scope="row" onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;">{{request._id}}</th>
+                <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;" >{{doctor_created_by_names[request._id]}}</td>
+                <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;" >{{request.name}}</td>
+                <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;" >{{doctor_received_by_names[request._id]}}</td>
+                <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;">{{health_problem_names[request._id]}}</td>
+                <td  class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{request._id}} ;">
                    Detail
                 </td>
-                    {% endif %}
             </tr>
+                        {% endif %}
+             {% else %}
+             {% if request.state == "Nevyřízeno"  and request.received_by == session['user_id']%}
+                    <tr style="cursor: pointer">
+                <th class="custom-button" scope="row" onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;">{{request._id}}</th>
+                <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;" >{{doctor_created_by_names[request._id]}}</td>
+                <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;" >{{request.name}}</td>
+                <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;" >{{doctor_received_by_names[request._id]}}</td>
+                <td class="custom-button" onclick="document.location = 'medical_examination?r_id=' + {{request._id}} ;">{{health_problem_names[request._id]}}</td>
+                <td  class="custom-button" onclick="document.location = 'problem_report?p_id=' + {{request._id}} ;">
+                   Detail
+                </td>
+            </tr>
+             {% endif %}
+             {% endif %}
             {% endfor %}
             
             

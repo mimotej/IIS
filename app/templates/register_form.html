@@ -23,19 +23,21 @@
               class="close" title="Zavřít">&times;</span>
             <div class="content-modal">
             <label for="name"><b>Jméno:</b></label>
-            <input type="text" placeholder="Zadejte své jméno" name="name" required>
+            <input type="text" placeholder="Zadejte své jméno" {% if data is defined %}value="{{ data['name'] }}" {% endif %} name="name">
             <label for="surname"><b>Příjmení:</b></label>
-            <input type="text" placeholder="Zadejte své prijmeni" name="surname" required>
-            <label for="email"><b>E-mail:</b></label>
-            <input type="email" placeholder="Zadejte svou e-mailovou adresu" name="email" required>
-            <label for="password"><b>Heslo:</b></label>
+            <input type="text" placeholder="Zadejte své prijmeni" {% if data is defined %}value="{{ data['surname'] }}" {% endif %} name="surname">
+            <label for="email"><b>E-mail: (Povinné)</b></label>
+            <input type="email" placeholder="Zadejte svou e-mailovou adresu" {% if data is defined %}value="{{ data['email'] }}" {% endif %} name="email" required>
+            <label for="password"><b>Heslo: (Povinné)</b></label>
             <input type="password" placeholder="Zadejte heslo" name="password" required>
-            <label for="phone"><b>Telefonní číslo:</b></label>
-            <input type="tel" placeholder="Zadejte své telefonní číslo" name="phone" pattern="[0-9]{9}">
+            <label for="phone"><b>Telefonní číslo:(Povinné - formát - 000000000)</b></label>
+            <input type="tel" placeholder="Zadejte své telefonní číslo" {% if data is defined %}value="{{ data['phone'] }}" {% endif %} name="phone" pattern="[0-9]{9}">
+            <label for="birth-number-reg"><b>Rodné číslo číslo:</b></label>
+            <input type="number" placeholder="Zadejte své rodné číslo"{% if data is defined %}value="{{ data['birthnumber'] }}" {% endif %} name="birthnumber">
             <label for="address"><b>Adresa:</b></label>
-            <input type="text" placeholder="Zadejte svou adresu" name="address">
+            <input type="text" placeholder="Zadejte svou adresu"  {% if data is defined %}value="{{ data['address'] }}" {% endif %}name="address">
                 <label for="address"><b>Město:</b></label>
-            <input type="text" placeholder="Zadejte svou adresu" name="city">
+            <input type="text" placeholder="Zadejte svou adresu" {% if data is defined %}value="{{ data['city'] }}" {% endif %}name="city">
             <div>
             <button class="button" type="submit">Registrovat</button>
             </div>

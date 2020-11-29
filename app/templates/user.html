@@ -10,36 +10,40 @@
         <div class="no-edit-user-form">
             {% if user %}
             <div id="pencil" class="edit-text"><a href="#edit_form"><i class="fa fa-pencil-square-o fa-2x" style="padding-left: 15px;" aria-hidden="true"></i><br />Editovat</a></div>
-            <div class="user-form-item"><label id="custom-label" for="name"><b>Jméno :</b></label><input type="text"
+            <div class="user-form-item"><label id="custom-label" for="name"><b>Jméno&nbsp;:</b></label><input type="text"
                                                                                                          id="edit-user-form"
-                                                                                                         placeholder=""
+                                                                                                         placeholder="{{user.name}}"
                                                                                                          class="edit-user-form-input"
                                                                                                          name="name"><span
                     id="edit-user-form" class="edit-user-form-input" style="display: block">{{user.name}}</span></div>
             <div class="user-form-item"><label id="custom-label" for="surname"><b>Příjmení :</b></label><input
-                    type="text" id="edit-user-form" placeholder="" class="edit-user-form-input" name="surname"><span
+                    type="text" id="edit-user-form" placeholder="{{user.surname}}" class="edit-user-form-input" name="surname"><span
                     id="edit-user-form" class="edit-user-form-input" style="display: block">{{user.surname}}</span></div>
             <div class="user-form-item"><label id="custom-label" for="email"><b>Email :</b></label><input type="email"
                                                                                                           id="edit-user-form"
-                                                                                                          placeholder=""
+                                                                                                          placeholder="{{user.email}}"
                                                                                                           class="edit-user-form-input"
                                                                                                           name="email"><span
                     id="edit-user-form" class="edit-user-form-input" style="display: block">{{user.email}}</span></div>
-            <div class="user-form-item"><label id="custom-label" for="tel-number"><b>Telefonní číslo :</b></label><input
-                    type="tel" pattern="[0-9]{9}" id="edit-user-form" placeholder="" class="edit-user-form-input" name="phone"><span
+            <div class="user-form-item"><label id="custom-label" for="tel-number"><b>Telefonní&nbsp;číslo&nbsp;:&nbsp;</b></label><input
+                    type="tel" pattern="[0-9]{9}" id="edit-user-form" placeholder="{{user.phone}}" class="edit-user-form-input" name="phone"><span
                     id="edit-user-form" class="edit-user-form-input" style="display: block">{{user.phone}}</span></div>
+            <div class="user-form-item"><label id="custom-label" for="tel-number"><b>Rodné&nbsp;číslo&nbsp;:&nbsp;</b></label><input
+                    type="number" id="edit-user-form" placeholder="{{user.birthNumber}}" class="edit-user-form-input" name="birthnumber"><span
+                    id="edit-user-form" class="edit-user-form-input" style="display: block">{{user.birthNumber}}</span></div>
             <div class="user-form-item"><label id="custom-label" for="home"><b>Adresa :</b></label><input type="text"
                                                                                                             id="edit-user-form"
-                                                                                                            placeholder=""
+                                                                                                            placeholder="{{user.address}}"
                                                                                                             class="edit-user-form-input"
                                                                                                             name="address" ><span
-                    id="edit-user-form" class="edit-user-form-input" style="display: block">{{ user.address }}</span></div>
+                    id="edit-user-form" class="edit-user-form-input" style="display: block">{% if user.address != None %}{{user.address}}{% endif %}</span></div>
                 <div class="user-form-item"><label id="custom-label" for="home"><b>Město :</b></label><input type="text"
                                                                                                             id="edit-user-form"
-                                                                                                            placeholder=""
+                                                                                                            placeholder="{{user.city}}"
                                                                                                             class="edit-user-form-input"
                                                                                                             name="city" ><span
-                    id="edit-user-form" class="edit-user-form-input" style="display: block">{{ user.city }}</span></div>
+                    id="edit-user-form" class="edit-user-form-input" style="display: block">{% if user.city != None %}{{user.city}}{% endif %}</span></div>
+            {% if session["isAdmin"] %}
                             <div class="user-form-item"><label id="custom-label" for="home"><b>Admin :</b></label><input type="checkbox"
                                                                                                             id="edit-user-form"
                                                                                                             placeholder=""
@@ -58,6 +62,7 @@
                                                                                                             class="edit-user-form-input"
                                                                                                             name="isinsurance" {% if user.isInsurance == True %}checked{% endif %} value="True"><span
                     id="edit-user-form" class="edit-user-form-input" style="display: block; font-size: 32px" ">{% if user.isInsurance == True %}&#10003;{% else %}&times;{% endif %}</span></div>
+                {% endif %}
                 <button id="edit-user-form" class="button edit-user-form-input button-edit-user-form-input" type="submit" value="update_user" name="submit_button">
                 Změnit
             </button>

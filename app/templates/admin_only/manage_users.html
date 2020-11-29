@@ -27,12 +27,25 @@
                 </tr>
             </form>
             {%for user in users%}
+                {% if data is defined %}
+                    {% if data.get("_id") == user._id or data.get("name") == user.name or data.get("surname") == user.surname or data.get("email") == user.email%}
+                        <tr>
                 <th scope="row">{{ user._id}}</th>
                 <td>{{user.name}}</td>
                 <td>{{user.surname}}</td>
                 <td>{{user.email}}</td>
                 <td><form action="{{url_for('update_user', id=user._id)}}"><button class="button" type="submit" onclick="{{user.url}}" style="border-radius: 0;padding:9px 0px">Upravit</button></form></td>
             </tr>
+                        {% endif %}
+                {% else %}
+                        <tr>
+                 <th scope="row">{{ user._id}}</th>
+                <td>{{user.name}}</td>
+                <td>{{user.surname}}</td>
+                <td>{{user.email}}</td>
+                <td><form action="{{url_for('update_user', id=user._id)}}"><button class="button" type="submit" onclick="{{user.url}}" style="border-radius: 0;padding:9px 0px">Upravit</button></form></td>
+            </tr>
+                {% endif %}
             {%endfor%}
             <!--{#% for row in rows %#}
     <tr>

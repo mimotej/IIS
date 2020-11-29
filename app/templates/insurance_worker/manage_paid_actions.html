@@ -16,12 +16,12 @@
             </tr>
             </thead>
             <tbody>
-            <form action="/paid_action_db" method="post">
+            <form method="post">
             <tr>
                 <th scope="row" class="input-row"><input type="text" style="border-radius: 0" placeholder="" name="ID"
                                                          class="input-row"></th>
                 <td><input style="border-radius: 0" type="text" placeholder="" name="name" class="input-row"></td>
-                <td><input style="border-radius: 0;" type="text" placeholder="" name="state" class="input-row"></td>
+                <td><input style="border-radius: 0;" type="text" placeholder="" name="price" class="input-row"></td>
                 <td><input style="border-radius: 0;" type="text" placeholder="" name="type" class="input-row"></td>
                 <td><input style="border-radius: 0;" type="text" placeholder="" name="creator" class="input-row"></td>
                 <td><input style="border-radius: 0;" type="text" placeholder="" name="state" class="input-row"></td>
@@ -31,7 +31,9 @@
             </tr>
             </form>
                 {% for p_request,p_req in zip(templates,p_requests) %}
-                {% if p_req.state == "Čekající" %}
+                  {% if data is defined %}
+                    {% if data.get("ID") == p_req._id or data.get("name") == p_request.name or data.get("price") == p_request.price or data.get("type") ==p_request.type or
+                    data.get("creator") == p_doctor[p_req._id] or data.get("state") == p_req.state %}
                 <tr>
                 <th scope="row">{{p_req._id}}</th>
                 <td>{{p_request.name}}</td>
@@ -42,6 +44,20 @@
                 <td style="padding-top: 0; padding-bottom: 0"><span style="font-size: 32px; cursor: pointer" onclick="document.location = '{{url_for('process_request_approved_payment',  payment_id=p_req._id)}}';" >&#10003;</span> <span
                         style="font-size: 32px; padding-left: 15px; cursor: pointer" onclick="document.location = '{{url_for('process_request_not_approved_payment',  payment_id=p_req._id)}}';">&times;</span></td>
                 </tr>
+                    {% endif %}
+                        {% else %}
+                 {% if p_req.state == "Čekající" %}
+                <tr>
+                <th scope="row">{{p_req._id}}</th>
+                <td>{{p_request.name}}</td>
+                <td>{{p_request.price}}</td>
+                <td>{{p_request.type}}</td>
+                <td>{{p_doctor[p_req._id]}}</td>
+                <td>{{p_req.state}}</td>
+                <td style="padding-top: 0; padding-bottom: 0"><span style="font-size: 32px; cursor: pointer" onclick="document.location = '{{url_for('process_request_approved_payment',  payment_id=p_req._id)}}';" >&#10003;</span> <span
+                        style="font-size: 32px; padding-left: 15px; cursor: pointer" onclick="document.location = '{{url_for('process_request_not_approved_payment',  payment_id=p_req._id)}}';">&times;</span></td>
+                </tr>
+                 {% endif %}
                 {% endif %}
             {%endfor%}
             <!-- možná ukázka generování kódu -->
