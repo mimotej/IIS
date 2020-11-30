@@ -357,6 +357,7 @@ def medical_report_creator(health_problem_id):
             filename=secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             add_row(MedicalReport, attachment=filename, author=session.get('user_id'), health_problem_id=health_problem_id, **data)
+            flash("Zpráva přidána")
         return render_template('not_menu_accessible/medical_report_creator.html')
     abort(404)
 
