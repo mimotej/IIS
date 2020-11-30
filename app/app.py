@@ -308,8 +308,7 @@ def medical_report():
                     problem=problem, doctor=doctor.name, reports=reports, examinations=examinations
                 )
         abort(404)
-    ### TODO Maybe get to previous link?
-    
+
 
 @app.route('/404')
 def not_found_404():

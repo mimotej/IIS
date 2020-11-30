@@ -13,6 +13,10 @@
             <label><b>Ošetřující lékař :</b></label>
             {{ author.name }}
         </div>
+        <div style="grid-area: date; font-size: 18px;">
+            <label><b>Datum vytvoření :</b></label>
+            {{ report.created_date.strftime('%Y-%m-%d') }}
+        </div>
         <div style="grid-area: description; font-size: 18px;">
             <label><b>Popis :</b></label><br />
             <span style="padding-left: 15px;"> {{ report.content }}</span>

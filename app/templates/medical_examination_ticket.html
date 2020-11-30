@@ -12,6 +12,7 @@
             <label><b>Email doktora:</b></label>
             <input type="text" placeholder="Zadejte email doktora" {% if received_by is defined %}value="{{ received_by }}" {% endif %}name="received_by" required>
         </div>
+
         <div>
             <label><b>Informace k žádosti :</b></label><br />
             <textarea style="width: 400px; height: 150px; border-radius:10px;" type="text" placeholder="Zadejte informace k žádosti" name="description">{% if description is defined %}{{ description }} {% endif %}</textarea>

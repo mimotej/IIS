@@ -413,6 +413,7 @@ span#edit-user-form {
     grid-template-areas:"title"
                         "name"
                         "doctor"
+                        "date"
                         "description"
                         "attachment";
 }

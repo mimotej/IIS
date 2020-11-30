@@ -27,6 +27,11 @@
             {{doctor_received_by.name}} {{doctor_received_by.surname}}
             </label>
         </div>
+            <div>
+            <label><b>Datum zadání žádosti:</b>
+            {{e_request.created_date.strftime('%Y-%m-%d')}}
+                </label>
+        </div>
         <div>
             <label><b>Stav:</b>
             {{e_request.state}}

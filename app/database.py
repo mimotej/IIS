@@ -3,6 +3,7 @@ import pickle
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+import datetime
 from flask_sqlalchemy import event
 from werkzeug.utils import secure_filename
 import os
@@ -155,6 +156,7 @@ class ExaminationRequest(db.Model):
                             db.ForeignKey('users._id'), nullable=True)
     health_problem_id = db.Column(db.ForeignKey('health_problems._id'),
         nullable=True)
+    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     def __init__(self, data):
         self._id = gen_id(ExaminationRequest)
@@ -177,6 +179,7 @@ class MedicalReport(db.Model):
     examination_request = db.Column("health_problem_id", db.Integer,
                                     db.ForeignKey('health_problems._id'),
                                     nullable=True)
+    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     def __init__(self, data):
         self._id = gen_id(MedicalReport)
@@ -187,29 +190,9 @@ class MedicalReport(db.Model):
         self.attachment_name = data.get('attachment')
         self.examination_request = data.get('examination_request')
 
-
-# Je toto potřeba záznam z vyšetření by měla být zpráva a podání žádosti
-# o proplacení to níže... Asi to tu nemá být ale zatím to tu nechám projistotu
-class MedicalIntervention(db.Model):
-    __tablename__ = 'medical_inervention'
-    _id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(256))
-    executor = db.Column(db.String(256), nullable=False)
-    price = db.Column(db.Integer, nullable=False)
-
-    def __init__(self, executor, price, description=None):
-        self._id = gen_id(MedicalIntervention)
-        self.executor = executor
-        self.price = price
-        self.description = description
-
-
 class PaymentRequest(db.Model):
     __tablename__ = 'payment_request'
     _id = db.Column(db.Integer, primary_key=True)
-    # žádost na konkrétní typ zákroku
-    # medical_intervention = db.Column("medical_intervention", db.Integer,
-    #   db.ForeignKey('payment_template._id'), nullable=True)
     template = db.Column("payment_template", db.Integer,
                          db.ForeignKey('payment_template._id'), nullable=False)
     creator = db.Column("creator", db.Integer, db.ForeignKey('users._id'))
@@ -227,7 +210,6 @@ class PaymentRequest(db.Model):
         self.validator = data.get('validator')
         self.examination_request = data.get('examination_request')
         self.state = data.get('state', 'Čekající')
-        # self.medical_intervention = data.get('medical_intervention')
 
 
 class PaymentTemplate(db.Model):
