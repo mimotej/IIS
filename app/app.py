@@ -40,7 +40,6 @@ def index():
         problems = HealthProblem.query.filter_by(_id=-1)
     if request.method == 'POST':
         data=request.form
-        #problems = get_query(problems, HEALT_PROBLEM_QUERY, request.form)
         return render_template('index.html', problems=problems, data=data)
     return render_template('index.html', problems=problems)
 
@@ -124,6 +123,9 @@ def update_user(id):
         if request.method == 'POST':
             if request.form['submit_button'] == 'delete_user':
                 if user.isDoctor or user.isAdmin:
+                    if User.query.filter_by(email=request.form['replacement_name']).first() == None:
+                        flash("Doktor nenalezen")
+                        return render_template('user.html', user=user, my_user=False)
                     user_replacement_id = User.query.filter_by(email=request.form['replacement_name']).first()._id
                     user.delete(sub_doc_id=user_replacement_id)
                 else:
@@ -133,7 +135,6 @@ def update_user(id):
                 return redirect(url_for('manage_users'))
             elif request.form['submit_button'] == 'update_user':
                 user.update(**request.form.to_dict())
-        # TODO user not logged in scenerio not coverd in user.html
         return render_template('user.html', user=user, my_user=False)
     else:
         abort(404)
@@ -219,7 +220,6 @@ def health_problem():
         return render_template('doctor_only/add_health_problem_new_user.html')
     abort(404)
 
-### ???
 @app.route('/health_old', methods=['GET', 'POST'])
 def health_problem_old():
     if session.get('isAdmin') or session.get('isDoctor'):
@@ -283,6 +283,7 @@ def tickets():
                 return render_template('medical_examination_ticket.html', name=data['name'], received_by=data['received_by'], description=data['description'])
             if doctor.isDoctor:
                 add_row(ExaminationRequest, created_by=session.get('user_id'), receiver=doctor._id, state="Nevyřízeno", health_problem=problem_id, **data)
+                flash("Žádost o vyšetření podána")
             else:
                 flash("Uživatel není doktor")
                 return render_template('medical_examination_ticket.html', name=data['name'],
@@ -305,9 +306,10 @@ def medical_report():
             if doctor:
                 return render_template(
                     'not_menu_accessible/problem_report.html',
-                    problem=problem, doctor=doctor.name, reports=reports, examinations=examinations
+                    problem=problem, doctor=doctor.surname, reports=reports, examinations=examinations
                 )
         abort(404)
+    abort(404)
 
 
 @app.route('/404')
@@ -357,7 +359,6 @@ def medical_report_creator(health_problem_id):
             add_row(MedicalReport, attachment=filename, author=session.get('user_id'), health_problem_id=health_problem_id, **data)
         return render_template('not_menu_accessible/medical_report_creator.html')
     abort(404)
-#TODO: Fix buttons change doctor after delete (just design)
 
 @app.route('/medical_examinations',  methods=['GET', 'POST'])
 def medical_examinations():
@@ -387,7 +388,7 @@ def medical_examinations():
 
 @app.route('/payment_request',  methods=['GET', 'POST'])
 def payment_request():
-    if session.get('isAdmin') or session.get('isInsurance'):
+    if session.get('isAdmin') or session.get('isInsurance') or session.get('isDoctor'):
         templates=PaymentTemplate.query.all()
         if request.method == 'POST':
             data = request.form.to_dict()
@@ -396,9 +397,8 @@ def payment_request():
                 flash("Neznámý typ zákroku")
                 return render_template('doctor_only/payment_request.html', data=data, templates=templates)
             data['template']=template._id
-            add_row(PaymentRequest, **data, creator=session.get('user_id'),
-                    examination_request=session.get('examination_request'),
-                    validator = 1 )  # je to vzdy 1 <- musi se to nejak upravit at je to korektne
+            insurance=User.query.filter_by(isInsurance=1).first()._id
+            add_row(PaymentRequest, **data, creator=session.get('user_id'), examination_request=session.get('examination_request'), validator=insurance)
             flash("Žádost podána")
         return render_template('doctor_only/payment_request.html',templates=templates)
     abort(404)

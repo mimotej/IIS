@@ -71,7 +71,7 @@ class User(db.Model):
         self.email = kwargs['email'] if kwargs.get('email') else self.email
         self.phone = kwargs['phone'] if kwargs.get('phone') else self.phone
         self.address = kwargs['address'] if kwargs.get('address') else self.address
-        self.city = kwargs['city'] if kwargs.get('city') else self.address
+        self.city = kwargs['city'] if kwargs.get('city') else self.city
         self.isAdmin = kwargs['isadmin'] == "True"  if kwargs.get('isadmin') else self.isAdmin
         self.isDoctor = kwargs['isdoctor'] =="True" if kwargs.get('isdoctor') else self.isDoctor
         self.isInsurance = kwargs['isinsurance'] == "True"  if kwargs.get('isinsurance') else self.isInsurance
@@ -199,7 +199,7 @@ class PaymentRequest(db.Model):
     validator = db.Column("validator", db.Integer, db.ForeignKey('users._id'))
     examination_request = db.Column(
         "examination_request", db.Integer,
-        db.ForeignKey('examination_request._id'), nullable=False
+        db.ForeignKey('examination_request._id'), nullable=True
     )
     state = db.Column(db.String(256), nullable=True)
 
