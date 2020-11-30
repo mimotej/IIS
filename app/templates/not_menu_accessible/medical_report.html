@@ -3,15 +3,10 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="report">
-        <b style="grid-area: title;font-size: 20px;text-align: left; vertical-align: middle; margin-bottom: 20px;">Karta zdravotního problému: {% if report.Name is defined %}{{report.Name}} {% else %}Název nezadán{% endif %}</b>
-
-        <div style="grid-area: name">
-            <label><b>Název :</b></label>
-           {{ report.Name }}
-        </div>
+        <b style="grid-area: title;font-size: 20px;text-align: left; vertical-align: middle; margin-bottom: 20px;">Karta zdravotní zprávy: {% if report.Name is defined %}{{report.Name}} {% else %}Název nezadán{% endif %}</b>
         <div style="grid-area: doctor; font-size: 18px;">
             <label><b>Ošetřující lékař :</b></label>
-            {{ author.name }}
+            {{ author.name }} {{ author.surname }}
         </div>
         <div style="grid-area: date; font-size: 18px;">
             <label><b>Datum vytvoření :</b></label>
