@@ -1,4 +1,4 @@
-#PROJEKT IIS
+# PROJEKT IIS
 Pro spuštěni je vyžadován docker
 
 RHEL/CentOS - sudo yum install docker
@@ -11,4 +11,8 @@ sudo docker build -t iis-project .
 sudo docker run -it -v $PWD:/app:Z -p 5000:5000 iis-project
 Web je na http://0.0.0.0/5000
 
-Odkaz na ER: https://drive.google.com/file/d/19_xYOqh3i3iQrzInmw7zHrXK5splNtJC/view?usp=sharing NUTNÉ přidat v drivu
+## Skupinový projekt vytvořený s pomocí Flask frameworku
+
+## Finální hodnocení 
+
+### 30/40
