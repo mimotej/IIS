@@ -11,7 +11,7 @@ sudo docker build -t iis-project .
 sudo docker run -it -v $PWD:/app:Z -p 5000:5000 iis-project
 Web je na http://0.0.0.0/5000
 
-## Skupinový projekt vytvořený s pomocí Flask frameworku
+## Skupinový projekt vytvořený s pomocí Flask frameworkem
 
 ## Finální hodnocení 
 
